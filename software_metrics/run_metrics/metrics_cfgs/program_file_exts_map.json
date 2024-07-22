@@ -1,0 +1,22 @@
+{
+  "Scala": [".scala"],
+  "C#": [".cs"],
+  "Objective-C": [".m"],
+  "Lisp": [".lisp",".lsp",".cl",".fasl"],
+  "Clojure": [".clj",".cljs"],
+  "FORTRAN": [".f", ".for", ".f90", ".f95", ".f03", ".f08", ".f77", ".f95", ".f03", ".f08"],
+  "PHP": [".php"],
+  "JavaScript": [".js"],
+  "TypeScript": [".ts"],
+  "R": [".r", ".rmd"],
+  "Java": [".java"],
+  "C++": [".cpp", ".cxx", ".cc", ".h", ".hpp", ".hxx", ".hh"],
+  "C": [".c", ".h"],
+  "Julia": [".jl"],
+  "Haskell": [".hs"],
+  "Rust": [".rs"],
+  "Go": [".go"],
+  "Shell": [".zsh",".sh",".ksh",".csh",".bash"],
+  "Python": [".py", ".pyc", ".pyd", ".pyo", ".pyw", ".pyx", ".pxd", ".pxi"]
+}
+
