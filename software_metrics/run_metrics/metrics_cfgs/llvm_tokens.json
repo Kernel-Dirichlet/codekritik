@@ -1,0 +1,23 @@
+{
+    "LLVM": {
+        "assignments": [
+            "alloca",
+            "store",
+            "load",
+            "phi"
+        ],
+        "branches": [
+            "br",
+            "switch",
+            "indirectbr"
+        ],
+        "conditionals": [
+            "icmp",
+            "fcmp"
+        ],
+        "loops": [
+            "br",
+            "indirectbr"
+        ]
+    }
+}

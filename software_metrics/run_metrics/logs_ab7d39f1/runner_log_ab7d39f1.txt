@@ -1,0 +1,6 @@
+CODE ANALYSIS FOR DIR: ../../
+TIME: 2024-07-26 17:20:15
+HASH: ab7d39f14d6656e0c926a1bd1f7e5e5f9c05ce910337954d379ee4ad20addb5b
+LOC_file: ./logs_ab7d39f1/LOC_file.txtABC_file: ./logs_ab7d39f1/ABC_file.txt
+Halstead_metrics JSON path: ./logs_ab7d39f1/halstead_metrics.json
+./logs_ab7d39f1/IPL_estimates.txt

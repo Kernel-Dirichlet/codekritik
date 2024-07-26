@@ -19,3 +19,10 @@
 .ts
 .r
 .sh
+.ll
+.asm
+.cob
+.cbl
+.cpy
+.cobol
+.cb

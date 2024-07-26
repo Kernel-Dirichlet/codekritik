@@ -1,0 +1,755 @@
+{
+    "Python": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "//=",
+            "**=",
+            "&=",
+            "|=",
+            "^=",
+            ">>=",
+            "<<="
+        ],
+        "branches": [
+            "if",
+            "elif",
+            "else"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "and",
+            "or",
+            "not"
+        ],
+        "loops": [
+            "for",
+            "while"
+        ]
+    },
+    "Julia": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "//=",
+            "^=",
+            "%=",
+            "&=",
+            "|=",
+            "$=",
+            "<<=",
+            ">>="
+        ],
+        "branches": [
+            "if",
+            "elseif",
+            "else"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while"
+        ]
+    },
+    "Rust": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "match"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "loop"
+        ]
+    },
+    "Bash": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            ">>=",
+            "<<="
+        ],
+        "branches": [
+            "if",
+            "elif",
+            "else",
+            "case",
+            "select"
+        ],
+        "conditionals": [
+            "-eq",
+            "-ne",
+            "-lt",
+            "-le",
+            "-gt",
+            "-ge",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "until"
+        ]
+    },
+    "C": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do"
+        ]
+    },
+    "C++": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do"
+        ]
+    },
+    "C#": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do",
+            "foreach"
+        ]
+    },
+    "Objective-C": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do"
+        ]
+    },
+    "Java": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do"
+        ]
+    },
+    "JavaScript": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>=",
+            ">>>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "===",
+            "!==",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do",
+            "foreach"
+        ]
+    },
+    "TypeScript": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>=",
+            ">>>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "===",
+            "!==",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do"
+        ]
+    },
+    "Haskell": {
+        "assignments": [
+            "="
+        ],
+        "branches": [
+            "if",
+            "then",
+            "else",
+            "case",
+            "of"
+        ],
+        "conditionals": [
+            "==",
+            "/=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "not"
+        ],
+        "loops": []
+    },
+    "Go": {
+        "assignments": [
+            "=",
+            ":=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for"
+        ]
+    },
+    "FORTRAN": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/="
+        ],
+        "branches": [
+            "if",
+            "else if",
+            "else",
+            "select case",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            ".eq.",
+            ".ne.",
+            ".lt.",
+            ".le.",
+            ".gt.",
+            ".ge.",
+            ".and.",
+            ".or.",
+            ".not."
+        ],
+        "loops": [
+            "DO",
+            "DO WHILE",
+            "FORALL"
+        ]
+    },
+    "COBOL": {
+        "assignments": [
+            "MOVE"
+        ],
+        "branches": [
+            "IF",
+            "ELSE",
+            "ELSE IF",
+            "EVALUATE",
+            "WHEN",
+            "PERFORM",
+            "END-IF"
+        ],
+        "conditionals": [
+            "=",
+            "NOT =",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "AND",
+            "OR",
+            "NOT"
+        ],
+        "loops": [
+            "PERFORM",
+            "PERFORM UNTIL",
+            "PERFORM VARYING"
+        ]
+    },
+    "R": {
+        "assignments": [
+            "<-",
+            "<<-",
+            "=",
+            "->",
+            "->>"
+        ],
+        "branches": [
+            "if",
+            "else",
+            "else if",
+            "for",
+            "while",
+            "repeat",
+            "switch"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&",
+            "&&",
+            "|",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "repeat"
+        ]
+    },
+    "Lisp": {
+        "assignments": [
+            "setq",
+            "setf",
+            "defparameter",
+            "defvar"
+        ],
+        "branches": [
+            "if",
+            "cond",
+            "when",
+            "unless",
+            "case",
+            "ecase",
+            "typecase",
+            "etypecase"
+        ],
+        "conditionals": [
+            "eq",
+            "eql",
+            "equal",
+            "=",
+            "/=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "and",
+            "or",
+            "not"
+        ],
+        "loops": [
+            "loop",
+            "do",
+            "dotimes",
+            "dolist"
+        ]
+    },
+    "PHP": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>=",
+            "=>"
+        ],
+        "branches": [
+            "if",
+            "else",
+            "else if",
+            "elseif",
+            "switch",
+            "case",
+            "default"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "===",
+            "!==",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do",
+            "foreach"
+        ]
+    },
+    "Clojure": {
+        "assignments": [
+            "def",
+            "let",
+            "defn",
+            "defmacro",
+            "set!"
+        ],
+        "branches": [
+            "if",
+            "if-not",
+            "when",
+            "when-not",
+            "cond",
+            "case"
+        ],
+        "conditionals": [
+            "=",
+            "not=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "and",
+            "or",
+            "not"
+        ],
+        "loops": [
+            "loop",
+            "for",
+            "while",
+            "doseq",
+            "dotimes",
+            "recur"
+        ]
+    },
+    "Scala": {
+        "assignments": [
+            "=",
+            "+=",
+            "-=",
+            "*=",
+            "/=",
+            "%=",
+            "&=",
+            "|=",
+            "^=",
+            "<<=",
+            ">>=",
+            "var",
+            "val"
+        ],
+        "branches": [
+            "if",
+            "else",
+            "else if",
+            "for",
+            "while",
+            "match",
+            "case",
+            "do",
+            "yield"
+        ],
+        "conditionals": [
+            "==",
+            "!=",
+            "<",
+            "<=",
+            ">",
+            ">=",
+            "&&",
+            "||",
+            "!"
+        ],
+        "loops": [
+            "for",
+            "while",
+            "do"
+        ]
+    }
+}

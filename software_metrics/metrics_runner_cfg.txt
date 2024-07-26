@@ -2,7 +2,4 @@ LOC: True
 ABC: True
 Halstead: True
 cyclomatic_complexity: True
-test_coverage: True
-code_coverage: True
 ipl_estimation: True
-func_prog_analysis: True
