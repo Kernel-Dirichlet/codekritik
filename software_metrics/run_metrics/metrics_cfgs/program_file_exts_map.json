@@ -6,7 +6,7 @@
   "Objective-C": [".m"],
   "Lisp": [".lisp",".lsp",".cl",".fasl"],
   "Clojure": [".clj",".cljs"],
-  "FORTRAN": [".f", ".for", ".f90", ".f95", ".f03", ".f08", ".f77", ".f95", ".f03", ".f08"],
+  "FORTRAN": [".f", ".for", ".f90", ".f95", ".f03", ".f08", ".f77", ".f95"],
   "PHP": [".php"],
   "JavaScript": [".js"],
   "TypeScript": [".ts"],
@@ -20,6 +20,6 @@
   "Go": [".go"],
   "Bash": [".bash",".sh"],
   "COBOL": [".cob",".cbl",".cpy",".cobol",".cb"],
-  "Python": [".py", ".pyc", ".pyd", ".pyo", ".pyw", ".pyx", ".pxd", ".pxi"]
+  "Python": [".py"]
 }
 

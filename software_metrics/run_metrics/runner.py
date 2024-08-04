@@ -48,39 +48,39 @@ def main():
     file_hash = hashlib.sha256(str(random.getrandbits(256)).encode('utf-8')).hexdigest()
     if args.log: 
         if not os.path.exists('logs_{}'.format(file_hash)):
-            os.makedirs('logs_{}'.format(file_hash[:8]))
-        f = open('./logs_{}/runner_log_{}.txt'.format(file_hash[:8],file_hash[:8]),'w')
-        f.write('CODE ANALYSIS FOR DIR: {}\n'.format(args.dir))
-        f.write('TIME: {}\n'.format(current_time))
-        f.write('HASH: {}\n'.format(file_hash))
-    if runner_cfg['LOC']:
-        loc_by_language, total_lines = count_lines_of_code(args.dir, extensions_to_count, extensions_map) #check upper and lowercase bool
-        print_loc_percentage(loc_by_language, total_lines)
-        if args.log: 
-            f.write('LOC_file: ./logs_{}/LOC_file.txt'.format(file_hash[:8]))
-            f2 = open('./logs_{}/LOC_file.txt'.format(file_hash[:8]),'w')
-            f2.write('TIME: {}\n'.format(current_time))
-            f2.write('HASH: {}\n'.format(file_hash))
+            os.makedirs('logs_{}'.format(file_hash[:10]))
+            if not os.path.exists('logs_{}/abc_metrics'.format(file_hash[:10])):
+                os.makedirs('logs_{}/abc_metrics'.format(file_hash[:10]))
+            if not os.path.exists('logs_{}/halstead_metrics'.format(file_hash[:10])):
+                os.makedirs('logs_{}/halstead_metrics'.format(file_hash[:10]))
+            if not os.path.exists('logs_{}/cyclomatic_complexity_metrics'.format(file_hash[:10])):
+                os.makedirs('logs_{}/cyclomatic_complexity_metrics'.format(file_hash[:10]))
+            if not os.path.exists('logs_{}/loc_metrics'.format(file_hash[:10]))
 
-            langs = list(loc_by_language.keys())
-            f2.write('LOC: {}\n'.format(total_lines))
-            for lang in langs:
-                loc_lang = loc_by_language[lang]
-                f2.write('{}: {}\n'.format(lang,loc_lang))
-            f2.close()
+
+    if runner_cfg['LOC']:
+        loc_dict = count_line_of_code(directory = args.dir,
+                                      extensions_to_count = extensions_to_count,
+                                      extensions_map = extensions_map,
+                                      hll_tokens = './metrics_cfgs/hll_tokens.json',
+                                      asm_tokens = './metrics_cfgs/asm_tokens.json',
+                                      llvm_tokens = './metrics_cfgs/llvm_tokens.json')
+
         
 
     if runner_cfg['ABC']:
         #TODO add print statements
-        f.write('ABC_file: ./logs_{}/ABC_file.txt\n'.format(file_hash[:8]))
-        abc_code_metrics = get_abc_metrics(directory = args.dir,
-                                           extensions_to_count = extensions_to_count,
-                                           extensions_map = extensions_map,
-                                           hll_tokens = './metrics_cfgs/hll_tokens.json',
-                                           asm_tokens = './metrics_cfgs/asm_tokens.json',
-                                           llvm_tokens = './metrics_cfgs/llvm_tokens.json')
+        f.write('ABC_file: ./logs_{}/ABC_file.txt\n'.format(file_hash[:10]))
+        abc_dict = abc_process_directory(directory = args.dir,
+                                         extensions_to_count = extensions_to_count,
+                                         extensions_map = extensions_map,
+                                         hll_tokens = './metrics_cfgs/hll_tokens.json',
+                                         asm_tokens = './metrics_cfgs/asm_tokens.json',
+                                         llvm_tokens = './metrics_cfgs/llvm_tokens.json')
 
-        f2 = open('./logs_{}/ABC_file.txt'.format(file_hash[:8]),'w')
+        abc_full_dict = abc_full_analysis(abc_dict,extensions_map)
+        import pdb ; pdb.set_trace()
+        f2 = open('./logs_{}/ABC_file.txt'.format(file_hash[:10]),'w')
         abc_summary_metrics = get_abc_summary_metrics(abc_code_metrics)
         if args.log:
             f2.write('ABC_SCORE: {}\n'.format(abc_summary_metrics['global']['abc_metric']))
@@ -101,7 +101,8 @@ def main():
                                                       extensions_to_count,
                                                       extensions_map)
         halstead_file_path = './logs_{}/halstead_metrics.json'.format(file_hash[:8])
-
+        full_results = halstead_full_analysis(halstead_metrics,
+                                              extensions_map)
         json.dump(halstead_metrics,open(halstead_file_path,'w'),indent = 4)
         f.write('Halstead_metrics JSON path: {}\n'.format(halstead_file_path))
     
@@ -109,7 +110,7 @@ def main():
         cc_metrics = cc_process_directory(args.dir,
                                   extensions_to_count,
                                   extensions_map)
-
+        cc_full_analysis(cc_metrics)
         cc_file_path = './logs_{}/cyclomatic_complexity.json'.format(file_hash[:8])
         json.dump(cc_metrics,open(cc_file_path,'w'),indent = 4)
 
