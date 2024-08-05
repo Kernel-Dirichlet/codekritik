@@ -2,4 +2,5 @@ LOC: True
 ABC: True
 Halstead: True
 cyclomatic_complexity: True
+Maintainability_index: True
 ipl_estimation: True

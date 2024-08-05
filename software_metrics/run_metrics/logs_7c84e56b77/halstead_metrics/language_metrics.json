@@ -1,0 +1,74 @@
+{
+    "Python": {
+        "unique_operators": 76,
+        "unique_operands": 1530,
+        "total_operators": 2344,
+        "total_operands": 2333,
+        "vocabulary_size": 1606,
+        "program_length": 4677,
+        "volume": 36391.44294387565,
+        "difficulty": 60.744776775794946,
+        "effort": 576791.4240989304,
+        "estimated_bugs": 13
+    },
+    "Julia": {
+        "unique_operators": 3,
+        "unique_operands": 12,
+        "total_operators": 6,
+        "total_operands": 13,
+        "vocabulary_size": 15,
+        "program_length": 19,
+        "volume": 74.23092131656186,
+        "difficulty": 1.625,
+        "effort": 120.62524713941302,
+        "estimated_bugs": 0
+    },
+    "Rust": {
+        "unique_operators": 5,
+        "unique_operands": 20,
+        "total_operators": 12,
+        "total_operands": 22,
+        "vocabulary_size": 25,
+        "program_length": 34,
+        "volume": 132.7887803680249,
+        "difficulty": 2.7666666666666666,
+        "effort": 269.02053257527143,
+        "estimated_bugs": 0
+    },
+    "LLVM": {
+        "unique_operators": 9,
+        "unique_operands": 2064,
+        "total_operators": 3270,
+        "total_operands": 3612,
+        "vocabulary_size": 2073,
+        "program_length": 6882,
+        "volume": 75822.46528843499,
+        "difficulty": 7.875,
+        "effort": 597101.9141464256,
+        "estimated_bugs": 25
+    },
+    "Bash": {
+        "unique_operators": 2,
+        "unique_operands": 5,
+        "total_operators": 4,
+        "total_operands": 5,
+        "vocabulary_size": 7,
+        "program_length": 9,
+        "volume": 25.26619429851844,
+        "difficulty": 1.0,
+        "effort": 25.26619429851844,
+        "estimated_bugs": 0
+    },
+    "C++": {
+        "unique_operators": 3,
+        "unique_operands": 9,
+        "total_operators": 7,
+        "total_operands": 9,
+        "vocabulary_size": 12,
+        "program_length": 16,
+        "volume": 57.3594000115385,
+        "difficulty": 1.5,
+        "effort": 86.03910001730775,
+        "estimated_bugs": 0
+    }
+}

@@ -33,6 +33,9 @@
             "loope",
             "loopnz",
             "loopne"
+        ],
+        "comments": [
+            ";"
         ]
     },
     "ARM": {
@@ -64,6 +67,9 @@
             "b",
             "bl",
             "bx"
+        ],
+        "comments": [
+            ";"
         ]
     },
     "RISC-V": {
@@ -95,6 +101,9 @@
         "loops": [
             "j",
             "jal"
+        ],
+        "comments": [
+            ";"
         ]
     },
     "MIPS": {
@@ -125,6 +134,9 @@
         "loops": [
             "j",
             "jal"
+        ],
+        "comments": [
+            "#"
         ]
     },
     "PowerPC": {
@@ -158,6 +170,9 @@
         "loops": [
             "b",
             "bl"
+        ],
+        "comments": [
+            "#"
         ]
     },
     "SPARC": {
@@ -191,6 +206,9 @@
             "ba",
             "b",
             "bl"
+        ],
+        "comments": [
+            "!"
         ]
     },
     "Z80": {
@@ -225,6 +243,9 @@
             "jp",
             "jr",
             "call"
+        ],
+        "comments": [
+            ";"
         ]
     }
 }

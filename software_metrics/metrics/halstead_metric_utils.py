@@ -124,4 +124,46 @@ def halstead_process_directory(directory,
     
     return halstead_metrics
 
+def halstead_full_analysis(halstead_dict,extensions_map):
+
+    lang_dict = {}
+    files = list(halstead_dict.keys())
+    for i,file in enumerate(files):
+        ext = '.' + file.split('.')[-1]
+        lang = get_language_for_extension(extensions_map,ext)
+        if lang == 'Unknown':
+            continue
+        if lang not in lang_dict.keys():
+            lang_dict[lang] = {'unique_operators': 0,
+
+                               'unique_operands': 0,
+                               'total_operators': 0,
+                               'total_operands': 0,
+                               'vocabulary_size': 0,
+                               'program_length': 0,
+                               'volume': 0,
+                               'difficulty': 0,
+                               'effort': 0,
+                               'estimated_bugs': 0}
+
+        if lang in lang_dict.keys():
+            for key in halstead_dict[file].keys():
+                lang_dict[lang][key] += halstead_dict[file][key]
+        
+    global_dict = {k: 0 for k in lang_dict[lang]}
+    for lang in lang_dict.keys():
+        for key in lang_dict[lang].keys():
+            global_dict[key] += lang_dict[lang][key]
+    halstead_full_dict = {'global_dict': global_dict,
+                          'language_dict': lang_dict,
+                          'file_dict': halstead_dict}
+    return halstead_full_dict
+
+
+
+
+
+
+
+    
 

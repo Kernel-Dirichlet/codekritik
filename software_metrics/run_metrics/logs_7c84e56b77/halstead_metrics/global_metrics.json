@@ -1,0 +1,12 @@
+{
+    "unique_operators": 98,
+    "unique_operands": 3640,
+    "total_operators": 5643,
+    "total_operands": 5994,
+    "vocabulary_size": 3738,
+    "program_length": 11637,
+    "volume": 112503.55352830529,
+    "difficulty": 75.51144344246161,
+    "effort": 1174394.2893193867,
+    "estimated_bugs": 38
+}

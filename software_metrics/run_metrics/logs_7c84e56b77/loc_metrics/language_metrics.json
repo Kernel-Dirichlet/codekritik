@@ -1,0 +1,38 @@
+{
+    "Python": {
+        "loc": 1486,
+        "bloc": 276,
+        "sloc": 1095,
+        "cloc": 115
+    },
+    "Julia": {
+        "loc": 9,
+        "bloc": 1,
+        "sloc": 8,
+        "cloc": 0
+    },
+    "Rust": {
+        "loc": 16,
+        "bloc": 3,
+        "sloc": 13,
+        "cloc": 0
+    },
+    "LLVM": {
+        "loc": 941,
+        "bloc": 51,
+        "sloc": 826,
+        "cloc": 64
+    },
+    "Bash": {
+        "loc": 3,
+        "bloc": 1,
+        "sloc": 1,
+        "cloc": 1
+    },
+    "C++": {
+        "loc": 7,
+        "bloc": 2,
+        "sloc": 5,
+        "cloc": 0
+    }
+}

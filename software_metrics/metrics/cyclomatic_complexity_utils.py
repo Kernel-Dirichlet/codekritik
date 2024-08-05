@@ -126,11 +126,11 @@ def compute_cyclomatic_complexity(code_lines,
     }
 
 def cc_process_directory(directory,
-                                 extensions_to_count,
-                                 extensions_map,
-                                 hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
-                                 asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                                 llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                         extensions_to_count,
+                         extensions_map,
+                         hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
+                         asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
+                         llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
 
     langs, cc_dict = [], {}
     for root,dirs,files in os.walk(directory):
@@ -155,6 +155,30 @@ def cc_process_directory(directory,
                                                             lang_dict = lang_dict)
                     cc_dict[file_path] = results
     return cc_dict
+
+def cc_full_analysis(cc_dict,extensions_map):
+
+    files = list(cc_dict.keys())
+    lang_dict = {}
+    for i,file in enumerate(files):
+        ext = '.' + file.split('.')[-1] 
+        lang = get_language_for_extension(extensions_map,ext)
+        if lang not in lang_dict.keys():
+            lang_dict[lang] = {'cyclomatic_complexity': 0}
+        else:
+            lang_dict[lang]['cyclomatic_complexity'] += cc_dict[file]['cyclomatic_complexity']
+
+    total_complexity = 0
+    for lang in lang_dict.keys():
+        total_complexity += lang_dict[lang]['cyclomatic_complexity']
+    global_dict = {'cyclomatic_complexity': total_complexity}
+
+    full_dict = {'file_dict': cc_dict,
+                 'language_dict': lang_dict,
+                 'global_dict': global_dict}
+    return full_dict
+
+
 
 
 

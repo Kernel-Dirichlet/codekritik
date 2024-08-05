@@ -34,6 +34,11 @@
         "loops": [
             "for",
             "while"
+        ],
+        "comments": [
+            "#",
+            "\"\"\"",
+            "'''"
         ]
     },
     "Julia": {
@@ -71,6 +76,11 @@
         "loops": [
             "for",
             "while"
+        ],
+        "comments": [
+            "#",
+            "#=",
+            "=#"
         ]
     },
     "Rust": {
@@ -108,6 +118,11 @@
             "for",
             "while",
             "loop"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "Bash": {
@@ -146,6 +161,13 @@
             "for",
             "while",
             "until"
+        ],
+        "comments": [
+            "#",
+            ": '",
+            "'",
+            "<<'EOF'",
+            "EOF"
         ]
     },
     "C": {
@@ -185,6 +207,11 @@
             "for",
             "while",
             "do"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "C++": {
@@ -224,6 +251,11 @@
             "for",
             "while",
             "do"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "C#": {
@@ -264,6 +296,11 @@
             "while",
             "do",
             "foreach"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "Objective-C": {
@@ -303,6 +340,11 @@
             "for",
             "while",
             "do"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "Java": {
@@ -342,6 +384,11 @@
             "for",
             "while",
             "do"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "JavaScript": {
@@ -385,6 +432,11 @@
             "while",
             "do",
             "foreach"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "TypeScript": {
@@ -427,6 +479,11 @@
             "for",
             "while",
             "do"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "Haskell": {
@@ -451,7 +508,12 @@
             "||",
             "not"
         ],
-        "loops": []
+        "loops": [],
+        "comments": [
+            "--",
+            "{-",
+            "-}"
+        ]
     },
     "Go": {
         "assignments": [
@@ -489,6 +551,11 @@
         ],
         "loops": [
             "for"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "FORTRAN": {
@@ -522,6 +589,9 @@
             "DO",
             "DO WHILE",
             "FORALL"
+        ],
+        "comments": [
+            "!"
         ]
     },
     "COBOL": {
@@ -552,6 +622,10 @@
             "PERFORM",
             "PERFORM UNTIL",
             "PERFORM VARYING"
+        ],
+        "comments": [
+            "*",
+            "*>"
         ]
     },
     "R": {
@@ -588,6 +662,9 @@
             "for",
             "while",
             "repeat"
+        ],
+        "comments": [
+            "#"
         ]
     },
     "Lisp": {
@@ -626,6 +703,9 @@
             "do",
             "dotimes",
             "dolist"
+        ],
+        "comments": [
+            ";"
         ]
     },
     "PHP": {
@@ -670,6 +750,12 @@
             "while",
             "do",
             "foreach"
+        ],
+        "comments": [
+            "//",
+            "#",
+            "/*",
+            "*/"
         ]
     },
     "Clojure": {
@@ -706,6 +792,9 @@
             "doseq",
             "dotimes",
             "recur"
+        ],
+        "comments": [
+            ";"
         ]
     },
     "Scala": {
@@ -750,6 +839,11 @@
             "for",
             "while",
             "do"
+        ],
+        "comments": [
+            "//",
+            "/*",
+            "*/"
         ]
     }
 }

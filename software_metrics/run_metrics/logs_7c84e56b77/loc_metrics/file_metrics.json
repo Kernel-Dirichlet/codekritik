@@ -1,0 +1,104 @@
+{
+    "runner.py": {
+        "loc": 155,
+        "cloc": 1,
+        "sloc": 112,
+        "bloc": 42
+    },
+    "recursive_examples.jl": {
+        "loc": 9,
+        "cloc": 0,
+        "sloc": 8,
+        "bloc": 1
+    },
+    "py_func_demo.py": {
+        "loc": 29,
+        "cloc": 0,
+        "sloc": 21,
+        "bloc": 8
+    },
+    "generate_hll_tokens.py": {
+        "loc": 313,
+        "cloc": 23,
+        "sloc": 245,
+        "bloc": 45
+    },
+    "generate_lll_tokens.py": {
+        "loc": 132,
+        "cloc": 12,
+        "sloc": 106,
+        "bloc": 14
+    },
+    "main.rs": {
+        "loc": 12,
+        "cloc": 0,
+        "sloc": 10,
+        "bloc": 2
+    },
+    "main.ll": {
+        "loc": 941,
+        "cloc": 64,
+        "sloc": 826,
+        "bloc": 51
+    },
+    "hello_world.rs": {
+        "loc": 4,
+        "cloc": 0,
+        "sloc": 3,
+        "bloc": 1
+    },
+    "hello_world.sh": {
+        "loc": 3,
+        "cloc": 1,
+        "sloc": 1,
+        "bloc": 1
+    },
+    "hello_world.cpp": {
+        "loc": 7,
+        "cloc": 0,
+        "sloc": 5,
+        "bloc": 2
+    },
+    "loc_utils.py": {
+        "loc": 133,
+        "cloc": 1,
+        "sloc": 108,
+        "bloc": 24
+    },
+    "utils_main.py": {
+        "loc": 65,
+        "cloc": 0,
+        "sloc": 51,
+        "bloc": 14
+    },
+    "mi_utils.py": {
+        "loc": 51,
+        "cloc": 2,
+        "sloc": 36,
+        "bloc": 13
+    },
+    "abc_metric_utils.py": {
+        "loc": 188,
+        "cloc": 13,
+        "sloc": 147,
+        "bloc": 28
+    },
+    "halstead_metric_utils.py": {
+        "loc": 169,
+        "cloc": 62,
+        "sloc": 72,
+        "bloc": 35
+    },
+    "cyclomatic_complexity_utils.py": {
+        "loc": 184,
+        "cloc": 1,
+        "sloc": 145,
+        "bloc": 38
+    },
+    "func_programming_utils.py": {
+        "loc": 67,
+        "cloc": 0,
+        "sloc": 52,
+        "bloc": 15
+    }
+}

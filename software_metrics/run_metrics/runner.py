@@ -5,6 +5,7 @@ from utils_main import *
 from abc_metric_utils import *
 from halstead_metric_utils import *
 from cyclomatic_complexity_utils import *
+from mi_utils import *
 import argparse
 from datetime import datetime
 import hashlib 
@@ -46,31 +47,41 @@ def main():
     extensions_to_count = read_extensions_to_count(args.file_exts)
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     file_hash = hashlib.sha256(str(random.getrandbits(256)).encode('utf-8')).hexdigest()
+
     if args.log: 
         if not os.path.exists('logs_{}'.format(file_hash)):
             os.makedirs('logs_{}'.format(file_hash[:10]))
+
             if not os.path.exists('logs_{}/abc_metrics'.format(file_hash[:10])):
                 os.makedirs('logs_{}/abc_metrics'.format(file_hash[:10]))
+
             if not os.path.exists('logs_{}/halstead_metrics'.format(file_hash[:10])):
                 os.makedirs('logs_{}/halstead_metrics'.format(file_hash[:10]))
+
             if not os.path.exists('logs_{}/cyclomatic_complexity_metrics'.format(file_hash[:10])):
                 os.makedirs('logs_{}/cyclomatic_complexity_metrics'.format(file_hash[:10]))
-            if not os.path.exists('logs_{}/loc_metrics'.format(file_hash[:10]))
+
+            if not os.path.exists('logs_{}/loc_metrics'.format(file_hash[:10])):
+                os.makedirs('logs_{}/loc_metrics'.format(file_hash[:10]))
 
 
     if runner_cfg['LOC']:
-        loc_dict = count_line_of_code(directory = args.dir,
+        loc_dict = count_lines_of_code(directory = args.dir,
                                       extensions_to_count = extensions_to_count,
                                       extensions_map = extensions_map,
                                       hll_tokens = './metrics_cfgs/hll_tokens.json',
                                       asm_tokens = './metrics_cfgs/asm_tokens.json',
                                       llvm_tokens = './metrics_cfgs/llvm_tokens.json')
 
-        
+        full_loc_dict = loc_full_analysis(loc_dict,extensions_map)
+        final_loc_dict = append_timestamp_hash(full_dict = full_loc_dict,
+                                               timestamp = current_time,
+                                               hash_ = file_hash)
+
+        _ = dump_final_jsons(prefix_path = './logs_{}/loc_metrics'.format(file_hash[:10]),
+                         final_dicts = final_loc_dict)
 
     if runner_cfg['ABC']:
-        #TODO add print statements
-        f.write('ABC_file: ./logs_{}/ABC_file.txt\n'.format(file_hash[:10]))
         abc_dict = abc_process_directory(directory = args.dir,
                                          extensions_to_count = extensions_to_count,
                                          extensions_map = extensions_map,
@@ -78,21 +89,13 @@ def main():
                                          asm_tokens = './metrics_cfgs/asm_tokens.json',
                                          llvm_tokens = './metrics_cfgs/llvm_tokens.json')
 
-        abc_full_dict = abc_full_analysis(abc_dict,extensions_map)
-        import pdb ; pdb.set_trace()
-        f2 = open('./logs_{}/ABC_file.txt'.format(file_hash[:10]),'w')
-        abc_summary_metrics = get_abc_summary_metrics(abc_code_metrics)
-        if args.log:
-            f2.write('ABC_SCORE: {}\n'.format(abc_summary_metrics['global']['abc_metric']))
-            f2.write('Assignments: {}\n'.format(abc_summary_metrics['global']['assignments']))
-            f2.write('Branches: {}\n'.format(abc_summary_metrics['global']['branches']))
-            f2.write('Conditionals: {}\n'.format(abc_summary_metrics['global']['conditionals']))
-            for lang in langs: 
-                f2.write('ABC_SCORE - {}: {}\n'.format(lang,abc_summary_metrics[lang]['total_abc_metric']))
-                f2.write('Assignments - {}: {}\n'.format(lang,abc_summary_metrics[lang]['total_assignments']))
-                f2.write('Branches - {}: {}\n'.format(lang,abc_summary_metrics[lang]['total_branches']))
-                f2.write('Conditionals - {}: {}\n'.format(lang,abc_summary_metrics[lang]['total_conditionals']))
-            f2.close()
+        full_abc_dict = abc_full_analysis(abc_dict,extensions_map)
+        final_abc_dict = append_timestamp_hash(full_dict = full_abc_dict,
+                                               timestamp = current_time,
+                                               hash_ = file_hash)
+        _ = dump_final_jsons(prefix_path = './logs_{}/abc_metrics'.format(file_hash[:10]),
+                                            final_dicts = final_abc_dict)
+
     
     if runner_cfg['Halstead']:
         
@@ -100,55 +103,53 @@ def main():
         halstead_metrics = halstead_process_directory(args.dir,
                                                       extensions_to_count,
                                                       extensions_map)
-        halstead_file_path = './logs_{}/halstead_metrics.json'.format(file_hash[:8])
-        full_results = halstead_full_analysis(halstead_metrics,
-                                              extensions_map)
-        json.dump(halstead_metrics,open(halstead_file_path,'w'),indent = 4)
-        f.write('Halstead_metrics JSON path: {}\n'.format(halstead_file_path))
+        
+        full_halstead_dict = halstead_full_analysis(halstead_metrics,
+                                                    extensions_map)
+
+        final_halstead_dict = append_timestamp_hash(full_dict = full_halstead_dict,
+                                                    timestamp = current_time,
+                                                    hash_ = file_hash)
+
+        _ = dump_final_jsons(prefix_path = './logs_{}/halstead_metrics'.format(file_hash[:10]),
+                         final_dicts = final_halstead_dict)
+
+        
     
     if runner_cfg['cyclomatic_complexity']:
         cc_metrics = cc_process_directory(args.dir,
                                   extensions_to_count,
                                   extensions_map)
-        cc_full_analysis(cc_metrics)
-        cc_file_path = './logs_{}/cyclomatic_complexity.json'.format(file_hash[:8])
-        json.dump(cc_metrics,open(cc_file_path,'w'),indent = 4)
 
-    if runner_cfg['ipl_estimation']:
-        #TODO add print statements
-        assert runner_cfg['ABC'] is True
-        global_assignments = abc_summary_metrics['global']['assignments']
-        global_branches = abc_summary_metrics['global']['branches']
-        global_conditionals = abc_summary_metrics['global']['conditionals']
+        full_cc_dict = cc_full_analysis(cc_metrics,extensions_map)
+        final_cc_dict = append_timestamp_hash(full_dict = full_cc_dict,
+                                              timestamp = current_time,
+                                              hash_ = file_hash)
+         
+        _ = dump_final_jsons(prefix_path = './logs_{}/cyclomatic_complexity_metrics'.format(file_hash[:10]),
+                             final_dicts = final_cc_dict)
 
-        global_ipl_estimate = estimate_ipl(assignments = global_assignments,
-                                           branches = global_branches,
-                                           conditionals = global_conditionals)
-        if args.log:
-            f.write('./logs_{}/IPL_estimates.txt\n'.format(file_hash[:8]))
-            f2 = open('./logs_{}/IPL_estimates.txt'.format(file_hash[:8]),'w')
-
-            f2.write('Instruction Path Length (IPL) estimate: {} <= IPL <= {}\n'.format(global_ipl_estimate['lower'],
-                                                                                       global_ipl_estimate['upper']))
-        
-            for lang in langs:
-                lang_assignments = abc_summary_metrics[lang]['total_assignments']
-                lang_branches = abc_summary_metrics[lang]['total_branches']
-                lang_conditionals = abc_summary_metrics[lang]['total_conditionals']
-
-                lang_ipl_estimate = estimate_ipl(assignments = lang_assignments,
-                                                branches = lang_branches,
-                                                conditionals = lang_conditionals)
-
-                f2.write('Instruction Path Length (IPL) estimate - {}: {} <= IPL <= {}\n'.format(lang,
-                                                                                                lang_ipl_estimate['lower'],
-                                                                                                lang_ipl_estimate['upper']))
     
-    if args.log:
-        f.close()
+    if runner_cfg['Maintainability_index']:
+        assert 'cyclomatic_complexity' in runner_cfg.keys()
+        assert 'Halstead' in runner_cfg.keys()
+        assert 'LOC' in runner_cfg.keys()
+        
+        
+        mi_metrics = full_maintainability_calc(full_halstead_dict = full_halstead_dict,
+                                               full_cc_dict = full_cc_dict,
+                                               full_loc_dict = full_loc_dict)
+        
+        final_mi_metrics = append_timestamp_hash(full_dict = mi_metrics,
+                                                 timestamp = current_time,
+                                                 hash_ = file_hash)
+        json.dump(final_mi_metrics,open('./logs_{}/maintainability_metrics.json'.format(file_hash[:10]),'w'),indent = 4)
+    print('metrics finished computing for {}!'.format(args.dir))
+
 
 
 if __name__ == "__main__":
 
     main()
+ 
 

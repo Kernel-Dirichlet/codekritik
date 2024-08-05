@@ -2,6 +2,29 @@ import os
 import json
 
 
+def append_timestamp_hash(full_dict,
+                          timestamp,
+                          hash_):
+
+    new_dict = {'timestamp': timestamp,
+                'hash': hash_}
+    for key in full_dict.keys():
+        new_dict[key] = full_dict[key]
+    return new_dict
+
+def dump_final_jsons(prefix_path,final_dicts):
+
+    for key in final_dicts.keys():
+        if key not in ['timestamp','hash']:
+
+            parsed_name = key.split('_')
+            json_name = parsed_name[0] + '_' + 'metrics.json'
+            path = f"{prefix_path}/{json_name}"
+            json.dump(final_dicts[key],open(path,'w'),indent = 4)
+        else:
+            continue
+
+
 def read_valid_extensions(file_path): 
     extensions = json.load(open(file_path,'r'))
     return extensions
