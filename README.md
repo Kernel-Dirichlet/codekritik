@@ -1,6 +1,6 @@
 # CodeKritik
 This repository aims to provide a suite of static analysis tools to analyze code complexity. This is currently mostly a collection of heuristics, but will evolve with time.
-Unlike other code metrics related repos at the time of writing, this one computes software complexity by *file* and *language* in addition to an aggregate score across all files & languages. There is support for over 20 languages, including low-level assembly languages like MIPS. Please note this is release 0.0.1, and is *not* suitable for production. 
+Unlike other code metrics related repos at the time of writing, this one computes software complexity by *file* and *language* in addition to an aggregate score across all files & languages. There is support for over 20 languages, including low-level assembly languages like MIPS. Please note this is release 0.0.1, and is *not* suitable for production. Example directories are provided for the reader's viewing pleasure, but will probably go away in a later version. 
 
 ## Usage
 
