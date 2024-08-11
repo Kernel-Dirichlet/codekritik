@@ -71,7 +71,7 @@ def main():
                                       extensions_map = extensions_map,
                                       hll_tokens = './metrics_cfgs/hll_tokens.json',
                                       asm_tokens = './metrics_cfgs/asm_tokens.json',
-                                      llvm_tokens = './metrics_cfgs/llvm_tokens.json')
+                                      ir_tokens = './metrics_cfgs/ir_tokens.json')
 
         full_loc_dict = loc_full_analysis(loc_dict,extensions_map)
         final_loc_dict = append_timestamp_hash(full_dict = full_loc_dict,
@@ -87,12 +87,13 @@ def main():
                                          extensions_map = extensions_map,
                                          hll_tokens = './metrics_cfgs/hll_tokens.json',
                                          asm_tokens = './metrics_cfgs/asm_tokens.json',
-                                         llvm_tokens = './metrics_cfgs/llvm_tokens.json')
+                                         ir_tokens = './metrics_cfgs/ir_tokens.json')
 
         full_abc_dict = abc_full_analysis(abc_dict,extensions_map)
         final_abc_dict = append_timestamp_hash(full_dict = full_abc_dict,
                                                timestamp = current_time,
                                                hash_ = file_hash)
+
         _ = dump_final_jsons(prefix_path = './logs_{}/abc_metrics'.format(file_hash[:10]),
                                             final_dicts = final_abc_dict)
 

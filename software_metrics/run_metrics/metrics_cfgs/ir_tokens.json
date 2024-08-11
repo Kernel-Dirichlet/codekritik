@@ -1,0 +1,68 @@
+{
+    "LLVM": {
+        "assignments": [
+            "add",
+            "sub",
+            "mul",
+            "div",
+            "and",
+            "or",
+            "xor",
+            "shl",
+            "lshr",
+            "ashr",
+            "alloca",
+            "store",
+            "load",
+            "gep",
+            "phi",
+            "call"
+        ],
+        "branches": [
+            "br",
+            "ret",
+            "switch",
+            "indirectbr"
+        ],
+        "conditionals": [
+            "icmp",
+            "fcmp",
+            "select",
+            "br",
+            "switch"
+        ],
+        "loops": [],
+        "comments": [
+            "metadata",
+            "dbg",
+            "llvm.dbg.declare",
+            "llvm.dbg.value"
+        ]
+    },
+    "GIMPLE": {
+        "asignments": [
+            "GIMPLE_ASSIGN",
+            "GIMPLE_CALL",
+            "GIMPLE_ASM"
+        ],
+        "branches": [
+            "GIMPLE_GOTO",
+            "GIMPLE_RETURN",
+            "GIMPLE_LABEL",
+            "GIMPLE_RESX"
+        ],
+        "conditionals": [
+            "GIMPLE_COND",
+            "GIMPLE_SWITCH",
+            "GIMPLE_CATCH",
+            "GIMPLE_EH_MUST_NOT_THROW"
+        ],
+        "loops": [
+            "GIMPLE_DO_LOOP",
+            "GIMPLE_WHILE",
+            "GIMPLE_FOR",
+            "GIMPLE_LOOP"
+        ],
+        "comments": []
+    }
+}

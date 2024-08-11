@@ -2,6 +2,7 @@
   "Scala": [".scala"],
   "Assembly": [".a", ".asm"],
   "LLVM": [".ll"],
+  "IR_GROUP": [".gimple"],
   "C#": [".cs"],
   "Objective-C": [".m"],
   "Lisp": [".lisp",".lsp",".cl",".fasl"],

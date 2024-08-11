@@ -1,12 +1,5 @@
 import json
 
-# LLVM IR
-LLVM_ASSIGNMENTS = ["alloca", "store", "load", "phi"]
-LLVM_BRANCHES = ["br", "switch", "indirectbr"]
-LLVM_CONDITIONALS = ["icmp", "fcmp"]
-LLVM_LOOPS = ["br", "indirectbr"]
-LLVM_COMMENTS = [';']
-
 # x86 Assembly
 X86_ASSIGNMENTS = ["mov", "movzx", "movsx", "lea", "push", "pop"]
 X86_BRANCHES = ["jmp", "je", "jne", "jg", "jge", "jl", "jle", "ja", "jae", "jb", "jbe", "call", "ret"]
@@ -119,10 +112,6 @@ asm_dict = {
         "comments": Z80_COMMENTS,
     }
 }
-
-# Write LLVM dictionary to a file
-with open('llvm_tokens.json', 'w') as llvm_file:
-    json.dump(llvm_dict, llvm_file, indent=4)
 
 # Write assembly languages dictionary to a file
 with open('asm_tokens.json', 'w') as asm_file:
