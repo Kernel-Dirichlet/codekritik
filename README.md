@@ -8,12 +8,13 @@ Usage is simple, simply pass in a directory as a command-line argument to `/soft
 
 This creats a directory `logs_<hash>` and under each of those, there is a directory for each metric, further broken down by file and language. The exception to this is the maintainability index which is directly under `logs`. 
 
-Under `software_metrics/metrics/metrics_cfgs` there are many key files -
+Under `software_metrics/metrics/metrics_cfgs` there are several key files -
   1) `lang_regexes.json`. This file contains operators, keywords etc. which allow for pattern matching. This makes extending the complexity metrics calculation across languages trivial (even experimental ones) - simply add another key to the JSON file containing the patterns for all syntatic tokens of interest. 
   2) `program_file_exts.txt` - a file containing the extensions that the runner should consider when computing complexity. This can be easily be modified to ignore specific file exts. NOTE - BEHAVIOR OF THIS IS NOT YET TESTED! 
   3) `program_file_exts_map.json` - this file is a JSON which maps language -> List[allowable extensions]. This is also a key component in making the software complexity calculations extendable to other languages, and can be applied to novel languages as seamlessly as well-established ones.
   4) `generate_hll_tokens.py` - this file is responsible for auto-generating a JSON file which contains the assignments, branches, conditional, loop keywords, and comments which are used to calculate metrics. This allows the computations to be language agnostic and simply operate over syntactic tokens of interest. This file is for high-level languages like Python, Go, C++ etc. The generated file will be called `hll_tokens.json`. 
-  5) `generate_lll_tokens.py` - similarly, this file is responsible for auto-generating a JSON file which contains assignments, branches, conditionals, loop keywords and comments for *low-level* languages. This python program actually generates two files, one for LLVM and one for assembly languages. The files are `asm_tokens.json` and `llvm_tokens.json`. **NOTE - Additional Intermediate Representations besided LLVM will be added in the future**. When this occurs, there will be a `generate_hll_tokens.py` file, a `generate_lll_tokens.py` file (which will then only generated Assembly language tokens) and a `generate_ir_tokens.py` which will dump to a file called `ir_tokens.json` which will repace the `llvm_tokens.json` in future releases. 
+  5) `generate_lll_tokens.py` - similarly, this file is responsible for auto-generating a JSON file which contains the assignments, branches, conditional and loop keywords along with comment tokens for assembly-level languages like x86 and ARM.
+  6) `generate_ir_tokens.py` - like above, but for middle-end Intermediate Representation (IR) languages like LLVM and Gimble (the only two which are currently supported). 
 
 
 ### Current Metrics
