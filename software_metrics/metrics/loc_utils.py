@@ -2,6 +2,27 @@ import os
 import json
 from utils_main import * 
 
+def parse_source_lines(lines,
+                       language,
+                       lang_json):
+
+    lang_dict = json.load(lang_json)
+    import pdb ; pdb.set_trace()
+    single_line_comment = lang_dict[language]['comments'][0]
+    multi_line_comment_start = lang_dict[language]['comments'][1] if len(data[language]['comments']) > 1 else None
+    multi_line_comment_end = lang_dict[language]['comments'][2] if len(data[language]['comments']) > 2 else None
+    sloc = [] #list to hold SLOC, filtered from the entire file 
+
+    for line in lines: 
+        stripped_line = line.strip()
+        if stripped_line[0] == single_line_comment: 
+            continue
+        if stripped_line[0] in [multi_line_comment_start, multi_line_comment_end]:
+            continue
+        else:
+            sloc.append(line)
+    return sloc
+
 def count_lines(lines, language, json_file):
     
     with open(json_file, 'r') as f:
@@ -19,8 +40,7 @@ def count_lines(lines, language, json_file):
     source_lines = 0
     blank_lines = 0
     in_multi_line_comment = False
-
-    
+ 
     for line in lines:
         total_lines += 1
         stripped_line = line.strip()
@@ -55,7 +75,7 @@ def count_lines_of_code(directory,
                         extensions_map,
                         hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                         asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                        llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                        ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     langs = []
     loc_file_dict = {}
@@ -72,6 +92,11 @@ def count_lines_of_code(directory,
                 try:
                     with open(file_path,'r') as code_file:
                         code_lines = code_file.readlines()
+                        source_lines = parse_source_lines(lines = code_lines,
+                                                          language = language,
+                                                          lang_json = hll_toknes)
+                        import pdb ; pdb.set_trace()
+
                 except:
                     print('error reading file, likely a binary, skipping...')
                     continue
@@ -79,10 +104,11 @@ def count_lines_of_code(directory,
                     loc_dict = count_lines(lines = code_lines,
                                            language = language,
                                            json_file = asm_tokens)
-                if language == 'LLVM':
+
+                if language in ['LLVM','IR_GROUP']:
                     loc_dict = count_lines(lines = code_lines,
                                            language = language,
-                                           json_file = llvm_tokens)
+                                           json_file = ir_tokens)
                 else:
                     loc_dict = count_lines(lines = code_lines,
                                            language = language,
@@ -130,4 +156,3 @@ def loc_full_analysis(loc_dict,extensions_map):
                      'percentage_dict': percentage_dict}
 
     return loc_full_dict
-

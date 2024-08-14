@@ -15,13 +15,6 @@ def get_abcs(json_file, language, lines):
     branches = data[language]['branches']
     conditionals = data[language]['conditionals']
     
-    # Compile the regex patterns
-    # The regex pattern matches any word followed by one of the operators and some value.
-    # \b\w+\b matches a whole word (variable name or label) with word boundaries
-    # \s* matches any whitespace characters (zero or more)
-    # (operator) matches one of the operators
-    # .+ matches one or more of any character (the assigned value or target label)
-    
     # Compile patterns for assignments
     escaped_assignments = [re.escape(op) for op in assignments]
     assignment_pattern = re.compile(r'(\b\w+\b\s*' + r'|'.join(escaped_assignments) + r'\s*.+)')
@@ -54,7 +47,7 @@ def abc_process_directory(directory,
                           extensions_map,
                           hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                           asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                          llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                          ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
     langs = []
     abc_metrics = {}
     for root, dirs, files in os.walk(directory):
@@ -77,8 +70,8 @@ def abc_process_directory(directory,
                                     language = language,
                                     lines = code_lines)
 
-            if language == 'LLVM':
-                abc_dict = get_abcs(json_file = llvm_tokens,
+            if language in ['LLVM','IR_GROUP']:
+                abc_dict = get_abcs(json_file = ir_tokens,
                                     language = language,
                                     lines = code_lines)
             else:
@@ -102,7 +95,7 @@ def get_abc_metrics(directory,
                     extensions_map,
                     hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                     asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                    llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                    ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     code_metrics = {}
     langs = []
@@ -116,12 +109,13 @@ def get_abc_metrics(directory,
                     filepath = os.path.join(root, file)
                     with open(filepath, 'r', encoding = 'utf-8') as f:
                         lines = f.readlines()
-                        if extension in ['.asm','.a']:
+                        if language == 'Assembly':
                             abc_dict = get_abcs(json_file = asm_tokens,
                                                 language = language,
                                                 lines = lines)
-                        if extension == '.ll':
-                            abc_dict = get_abcs(json_file = llvm_tokens,
+
+                        if language in ['LLVM','GIMPLE']:
+                            abc_dict = get_abcs(json_file = ir_tokens,
                                                 language = language,
                                                 lines = lines)
                         else:

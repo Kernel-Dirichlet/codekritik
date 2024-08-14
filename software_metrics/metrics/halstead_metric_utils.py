@@ -91,7 +91,7 @@ def halstead_process_directory(directory,
                                extensions_map,
                                hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                                asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                               llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                               ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     """Processes files in the specified directory and computes Halstead metrics."""
     langs = []
@@ -109,8 +109,8 @@ def halstead_process_directory(directory,
                         code_lines = code_file.readlines()
                     if language == 'Assembly':
                         regexes = json.load(open(asm_tokens))
-                    if language == 'LLVM':
-                        regexes = json.load(open(llvm_tokens))
+                    if language in ['LLVM','IR_GROUP']:
+                        regexes = json.load(open(ir_tokens))
                     else:
                         regexes = json.load(open(hll_tokens))
                         
@@ -158,12 +158,3 @@ def halstead_full_analysis(halstead_dict,extensions_map):
                           'language_dict': lang_dict,
                           'file_dict': halstead_dict}
     return halstead_full_dict
-
-
-
-
-
-
-
-    
-

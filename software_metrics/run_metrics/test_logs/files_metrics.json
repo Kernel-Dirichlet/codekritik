@@ -1,0 +1,810 @@
+{
+    ".gitignore": {
+        "code_churn": {
+            "lines_added": 163,
+            "lines_deleted": 0,
+            "total_churn": 163,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    163,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "README.md": {
+        "code_churn": {
+            "lines_added": 64,
+            "lines_deleted": 16,
+            "total_churn": 80,
+            "churn_ratio": 4.0,
+            "churn_over_time": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    1,
+                    1
+                ],
+                [
+                    25,
+                    11
+                ],
+                [
+                    33,
+                    2
+                ],
+                [
+                    2,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 5
+    },
+    "software_metrics/metrics_runner_cfg.txt": {
+        "code_churn": {
+            "lines_added": 9,
+            "lines_deleted": 3,
+            "total_churn": 12,
+            "churn_ratio": 3.0,
+            "churn_over_time": [
+                [
+                    1,
+                    0
+                ],
+                [
+                    0,
+                    3
+                ],
+                [
+                    8,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 3
+    },
+    "software_metrics/run_metrics/git_metrics_runner.py": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/run_metrics/runner.py": {
+        "code_churn": {
+            "lines_added": 272,
+            "lines_deleted": 116,
+            "total_churn": 388,
+            "churn_ratio": 2.3448275862068964,
+            "churn_over_time": [
+                [
+                    3,
+                    2
+                ],
+                [
+                    60,
+                    59
+                ],
+                [
+                    31,
+                    30
+                ],
+                [
+                    51,
+                    25
+                ],
+                [
+                    127,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 5
+    },
+    "software_metrics/run_metrics/full_git_runner.py": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/run_metrics/julia_examples/recursive_examples.jl": {
+        "code_churn": {
+            "lines_added": 9,
+            "lines_deleted": 0,
+            "total_churn": 9,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    9,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/test_files/py_func_demo.py": {
+        "code_churn": {
+            "lines_added": 29,
+            "lines_deleted": 0,
+            "total_churn": 29,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    29,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/metrics_cfgs/asm_tokens.json": {
+        "code_churn": {
+            "lines_added": 251,
+            "lines_deleted": 0,
+            "total_churn": 251,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    21,
+                    0
+                ],
+                [
+                    230,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 2
+    },
+    "software_metrics/run_metrics/metrics_cfgs/generate_hll_tokens.py": {
+        "code_churn": {
+            "lines_added": 314,
+            "lines_deleted": 1,
+            "total_churn": 315,
+            "churn_ratio": 314.0,
+            "churn_over_time": [
+                [
+                    40,
+                    1
+                ],
+                [
+                    274,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 2
+    },
+    "software_metrics/run_metrics/metrics_cfgs/ir_tokens.json": {
+        "code_churn": {
+            "lines_added": 68,
+            "lines_deleted": 0,
+            "total_churn": 68,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    68,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/metrics_cfgs/program_file_exts_map.json": {
+        "code_churn": {
+            "lines_added": 29,
+            "lines_deleted": 3,
+            "total_churn": 32,
+            "churn_ratio": 9.666666666666666,
+            "churn_over_time": [
+                [
+                    1,
+                    0
+                ],
+                [
+                    2,
+                    2
+                ],
+                [
+                    4,
+                    1
+                ],
+                [
+                    22,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 4
+    },
+    "software_metrics/run_metrics/metrics_cfgs/hll_tokens.json": {
+        "code_churn": {
+            "lines_added": 850,
+            "lines_deleted": 1,
+            "total_churn": 851,
+            "churn_ratio": 850.0,
+            "churn_over_time": [
+                [
+                    95,
+                    1
+                ],
+                [
+                    755,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 2
+    },
+    "software_metrics/run_metrics/metrics_cfgs/generate_ir_tokens.py": {
+        "code_churn": {
+            "lines_added": 46,
+            "lines_deleted": 0,
+            "total_churn": 46,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    46,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/metrics_cfgs/generate_lll_tokens.py": {
+        "code_churn": {
+            "lines_added": 140,
+            "lines_deleted": 19,
+            "total_churn": 159,
+            "churn_ratio": 7.368421052631579,
+            "churn_over_time": [
+                [
+                    0,
+                    11
+                ],
+                [
+                    24,
+                    8
+                ],
+                [
+                    116,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 3
+    },
+    "software_metrics/run_metrics/metrics_cfgs/program_file_exts.txt": {
+        "code_churn": {
+            "lines_added": 57,
+            "lines_deleted": 10,
+            "total_churn": 67,
+            "churn_ratio": 5.7,
+            "churn_over_time": [
+                [
+                    29,
+                    10
+                ],
+                [
+                    7,
+                    0
+                ],
+                [
+                    21,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 3
+    },
+    "software_metrics/run_metrics/rust_examples/Cargo.lock": {
+        "code_churn": {
+            "lines_added": 7,
+            "lines_deleted": 0,
+            "total_churn": 7,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    7,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/rust_examples/Cargo.toml": {
+        "code_churn": {
+            "lines_added": 6,
+            "lines_deleted": 0,
+            "total_churn": 6,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    6,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/rust_examples/src/main.rs": {
+        "code_churn": {
+            "lines_added": 12,
+            "lines_deleted": 0,
+            "total_churn": 12,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    12,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/rust_examples/src/main.ll": {
+        "code_churn": {
+            "lines_added": 941,
+            "lines_deleted": 0,
+            "total_churn": 941,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    941,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.c": {
+        "code_churn": {
+            "lines_added": 7,
+            "lines_deleted": 0,
+            "total_churn": 7,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    7,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.clj": {
+        "code_churn": {
+            "lines_added": 1,
+            "lines_deleted": 0,
+            "total_churn": 1,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    1,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.f90": {
+        "code_churn": {
+            "lines_added": 4,
+            "lines_deleted": 0,
+            "total_churn": 4,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    4,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.go": {
+        "code_churn": {
+            "lines_added": 8,
+            "lines_deleted": 0,
+            "total_churn": 8,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    8,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.cs": {
+        "code_churn": {
+            "lines_added": 8,
+            "lines_deleted": 0,
+            "total_churn": 8,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    8,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.js": {
+        "code_churn": {
+            "lines_added": 1,
+            "lines_deleted": 0,
+            "total_churn": 1,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    1,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.ts": {
+        "code_churn": {
+            "lines_added": 1,
+            "lines_deleted": 0,
+            "total_churn": 1,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    1,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.jl": {
+        "code_churn": {
+            "lines_added": 2,
+            "lines_deleted": 0,
+            "total_churn": 2,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    2,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.py": {
+        "code_churn": {
+            "lines_added": 2,
+            "lines_deleted": 0,
+            "total_churn": 2,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    2,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.m": {
+        "code_churn": {
+            "lines_added": 9,
+            "lines_deleted": 0,
+            "total_churn": 9,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    9,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.hs": {
+        "code_churn": {
+            "lines_added": 3,
+            "lines_deleted": 0,
+            "total_churn": 3,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    3,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.java": {
+        "code_churn": {
+            "lines_added": 6,
+            "lines_deleted": 0,
+            "total_churn": 6,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    6,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.rs": {
+        "code_churn": {
+            "lines_added": 4,
+            "lines_deleted": 0,
+            "total_churn": 4,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    4,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.sh": {
+        "code_churn": {
+            "lines_added": 3,
+            "lines_deleted": 0,
+            "total_churn": 3,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    3,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/run_metrics/hello_worlds/hello_world.cpp": {
+        "code_churn": {
+            "lines_added": 7,
+            "lines_deleted": 0,
+            "total_churn": 7,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    7,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/metrics/loc_utils.py": {
+        "code_churn": {
+            "lines_added": 169,
+            "lines_deleted": 36,
+            "total_churn": 205,
+            "churn_ratio": 4.694444444444445,
+            "churn_over_time": [
+                [
+                    122,
+                    36
+                ],
+                [
+                    47,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 2
+    },
+    "software_metrics/metrics/git_metrics_utils.py": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/metrics/utils_main.py": {
+        "code_churn": {
+            "lines_added": 65,
+            "lines_deleted": 0,
+            "total_churn": 65,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    23,
+                    0
+                ],
+                [
+                    42,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 2
+    },
+    "software_metrics/metrics/mi_utils.py": {
+        "code_churn": {
+            "lines_added": 51,
+            "lines_deleted": 0,
+            "total_churn": 51,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    51,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    },
+    "software_metrics/metrics/abc_metric_utils.py": {
+        "code_churn": {
+            "lines_added": 247,
+            "lines_deleted": 59,
+            "total_churn": 306,
+            "churn_ratio": 4.186440677966102,
+            "churn_over_time": [
+                [
+                    81,
+                    43
+                ],
+                [
+                    84,
+                    16
+                ],
+                [
+                    82,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 3
+    },
+    "software_metrics/metrics/halstead_metric_utils.py": {
+        "code_churn": {
+            "lines_added": 226,
+            "lines_deleted": 57,
+            "total_churn": 283,
+            "churn_ratio": 3.9649122807017543,
+            "churn_over_time": [
+                [
+                    42,
+                    0
+                ],
+                [
+                    106,
+                    57
+                ],
+                [
+                    78,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 3
+    },
+    "software_metrics/metrics/cyclomatic_complexity_utils.py": {
+        "code_churn": {
+            "lines_added": 189,
+            "lines_deleted": 5,
+            "total_churn": 194,
+            "churn_ratio": 37.8,
+            "churn_over_time": [
+                [
+                    29,
+                    5
+                ],
+                [
+                    160,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 2
+    },
+    "software_metrics/metrics/__pycache__/halstead_metric_utils.cpython-312.pyc": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/metrics/__pycache__/git_metrics_utils.cpython-312.pyc": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/metrics/__pycache__/mi_utils.cpython-312.pyc": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/metrics/__pycache__/cyclomatic_complexity_utils.cpython-312.pyc": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/metrics/__pycache__/loc_utils.cpython-312.pyc": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/metrics/__pycache__/abc_metric_utils.cpython-312.pyc": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/metrics/__pycache__/utils_main.cpython-312.pyc": {
+        "code_churn": {
+            "lines_added": 0,
+            "lines_deleted": 0,
+            "total_churn": 0,
+            "churn_ratio": 0,
+            "churn_over_time": []
+        },
+        "file_changes": 0
+    },
+    "software_metrics/metrics/experimental/func_programming_utils.py": {
+        "code_churn": {
+            "lines_added": 67,
+            "lines_deleted": 0,
+            "total_churn": 67,
+            "churn_ratio": "infinite",
+            "churn_over_time": [
+                [
+                    67,
+                    0
+                ]
+            ]
+        },
+        "file_changes": 1
+    }
+}

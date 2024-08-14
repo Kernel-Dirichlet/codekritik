@@ -130,7 +130,7 @@ def cc_process_directory(directory,
                          extensions_map,
                          hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                          asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                         llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                         ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     langs, cc_dict = [], {}
     for root,dirs,files in os.walk(directory):
@@ -145,8 +145,8 @@ def cc_process_directory(directory,
                         code_lines = code_file.readlines()
                     if language == 'Assembly':
                         lang_dict = json.load(open(asm_tokens))
-                    if language == 'LLVM':
-                        lang_dict = json.load(open(llvm_tokens))
+                    if language in ['LLVM', 'IR_GROUP']:
+                        lang_dict = json.load(open(ir_tokens))
                     else:
                         lang_dict = json.load(open(hll_tokens))
 
@@ -177,8 +177,3 @@ def cc_full_analysis(cc_dict,extensions_map):
                  'language_dict': lang_dict,
                  'global_dict': global_dict}
     return full_dict
-
-
-
-
-
