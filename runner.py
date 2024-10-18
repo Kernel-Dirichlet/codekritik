@@ -1,5 +1,8 @@
 import sys
-sys.path.append('../metrics')
+import os
+
+sys.path.append('software_metrics/metrics')
+
 from loc_utils import *
 from utils_main import *
 from abc_metric_utils import *
@@ -22,12 +25,12 @@ def main():
 
     parser.add_argument('--json_exts',
                         type = str,
-                        default = "./metrics_cfgs/program_file_exts_map.json",
+                        default = "metrics_cfgs/program_file_exts_map.json",
                         help = "JSON file containing programming language to file extensions mapping.")
 
     parser.add_argument('--file_exts',
                         type = str,
-                        default = "./metrics_cfgs/program_file_exts.txt",
+                        default = "metrics_cfgs/program_file_exts.txt",
                         help = "Text file containing file extensions to count lines for.")
     
     parser.add_argument('--log',
@@ -37,7 +40,7 @@ def main():
 
     parser.add_argument('--runner_cfg',
                         type = str,
-                        default = '../metrics_runner_cfg.txt',
+                        default = 'metrics_runner_cfg.txt',
                         help = 'path to the metrics_runner CFG file which specifies which metrics to compute or omit')
 
 
@@ -47,7 +50,7 @@ def main():
     extensions_to_count = read_extensions_to_count(args.file_exts)
     current_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
     file_hash = hashlib.sha256(str(random.getrandbits(256)).encode('utf-8')).hexdigest()
-
+    
     if args.log: 
         if not os.path.exists('logs_{}'.format(file_hash)):
             os.makedirs('logs_{}'.format(file_hash[:10]))
@@ -69,9 +72,9 @@ def main():
         loc_dict = count_lines_of_code(directory = args.dir,
                                       extensions_to_count = extensions_to_count,
                                       extensions_map = extensions_map,
-                                      hll_tokens = './metrics_cfgs/hll_tokens.json',
-                                      asm_tokens = './metrics_cfgs/asm_tokens.json',
-                                      ir_tokens = './metrics_cfgs/ir_tokens.json')
+                                      hll_tokens = 'metrics_cfgs/hll_tokens.json',
+                                      asm_tokens = 'metrics_cfgs/asm_tokens.json',
+                                      ir_tokens = 'metrics_cfgs/ir_tokens.json')
 
         full_loc_dict = loc_full_analysis(loc_dict,extensions_map)
         final_loc_dict = append_timestamp_hash(full_dict = full_loc_dict,
@@ -85,9 +88,9 @@ def main():
         abc_dict = abc_process_directory(directory = args.dir,
                                          extensions_to_count = extensions_to_count,
                                          extensions_map = extensions_map,
-                                         hll_tokens = './metrics_cfgs/hll_tokens.json',
-                                         asm_tokens = './metrics_cfgs/asm_tokens.json',
-                                         ir_tokens = './metrics_cfgs/ir_tokens.json')
+                                         hll_tokens = 'metrics_cfgs/hll_tokens.json',
+                                         asm_tokens = 'metrics_cfgs/asm_tokens.json',
+                                         ir_tokens = 'metrics_cfgs/ir_tokens.json')
 
         full_abc_dict = abc_full_analysis(abc_dict,extensions_map)
         final_abc_dict = append_timestamp_hash(full_dict = full_abc_dict,
@@ -99,11 +102,12 @@ def main():
 
     
     if runner_cfg['Halstead']:
-        
-        #TODO add print statements
         halstead_metrics = halstead_process_directory(args.dir,
                                                       extensions_to_count,
-                                                      extensions_map)
+                                                      extensions_map,
+                                                      hll_tokens = 'metrics_cfgs/hll_tokens.json',
+                                                      asm_tokens = 'metrics_cfgs/asm_tokens.json',
+                                                      ir_tokens = 'metrics_cfgs/ir_tokens.json')
         
         full_halstead_dict = halstead_full_analysis(halstead_metrics,
                                                     extensions_map)
@@ -119,8 +123,11 @@ def main():
     
     if runner_cfg['cyclomatic_complexity']:
         cc_metrics = cc_process_directory(args.dir,
-                                  extensions_to_count,
-                                  extensions_map)
+                                          extensions_to_count,
+                                          extensions_map,
+                                          hll_tokens = 'metrics_cfgs/hll_tokens.json',
+                                          asm_tokens = 'metrics_cfgs/asm_tokens.json',
+                                          ir_tokens = 'metrics_cfgs/ir_tokens.json')
 
         full_cc_dict = cc_full_analysis(cc_metrics,extensions_map)
         final_cc_dict = append_timestamp_hash(full_dict = full_cc_dict,

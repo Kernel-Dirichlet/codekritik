@@ -2,7 +2,8 @@ import os
 import json
 import re
 import numpy as np
-from utils_main import * 
+from utils_main import *
+from loc_utils import fetch_lines
 import json
 import re
 
@@ -47,14 +48,16 @@ def get_abcs(json_file, language, lines):
         if conditional_pattern.search(line):
             conditional_count += 1
 
-    return {"assignments": assignment_count, "branches": branch_count, "conditionals": conditional_count}
+    return {"assignments": assignment_count,
+            "branches": branch_count,
+            "conditionals": conditional_count}
 
 def abc_process_directory(directory,
                           extensions_to_count,
                           extensions_map,
                           hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                           asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                          llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                          ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
     langs = []
     abc_metrics = {}
     for root, dirs, files in os.walk(directory):
@@ -69,22 +72,33 @@ def abc_process_directory(directory,
             try:
                 with open(file_path,'r') as code_file:
                     code_lines = code_file.readlines()
+                    if language == 'Assembly':
+                        comments_json = asm_tokens
+                    if language == 'LLVM':
+                        comments_json = ir_tokens
+                    else:
+                        comments_json = hll_tokens
+                    source_code_lines = fetch_lines(lines = code_lines,
+                                                    language = language,
+                                                    comments_json = comments_json,
+                                                    mode = 'source')
+                    #import pdb ; pdb.set_trace()
             except:
                 print('error reading file, likely a binary, skipping...')
                 continue
             if language == 'Assembly':
                 abc_dict = get_abcs(json_file = asm_tokens,
                                     language = language,
-                                    lines = code_lines)
-
+                                    lines = source_code_lines)
+                
             if language == 'LLVM':
-                abc_dict = get_abcs(json_file = llvm_tokens,
+                abc_dict = get_abcs(json_file = ir_tokens,
                                     language = language,
-                                    lines = code_lines)
+                                    lines = source_code_lines)
             else:
                 abc_dict = get_abcs(json_file = hll_tokens,
                                     language = language,
-                                    lines = code_lines)
+                                    lines = source_code_lines)
 
             a = abc_dict['assignments']
             b = abc_dict['branches']
@@ -92,55 +106,9 @@ def abc_process_directory(directory,
             abc_score = np.sqrt(a + b + c)
             abc_dict['abc_score'] = round(abc_score,1).item()
             abc_metrics[file_path] = abc_dict
-
+            
     
     return abc_metrics
-
-
-def get_abc_metrics(directory, 
-                    extensions_to_count,
-                    extensions_map,
-                    hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
-                    asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                    llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
-
-    code_metrics = {}
-    langs = []
-    for root, _, files in os.walk(directory):
-        for file in files:
-            _, extension = os.path.splitext(file)
-            if extension in extensions_to_count:
-                language = get_language_for_extension(extensions_map, extension)
-                langs.append(language)
-                if language != "Unknown":
-                    filepath = os.path.join(root, file)
-                    with open(filepath, 'r', encoding = 'utf-8') as f:
-                        lines = f.readlines()
-                        if extension in ['.asm','.a']:
-                            abc_dict = get_abcs(json_file = asm_tokens,
-                                                language = language,
-                                                lines = lines)
-                        if extension == '.ll':
-                            abc_dict = get_abcs(json_file = llvm_tokens,
-                                                language = language,
-                                                lines = lines)
-                        else:
-                            abc_dict = get_abcs(json_file = hll_tokens,
-                                                language = language,
-                                                lines = lines)
-
-                        assignments = abc_dict['assignments']
-                        branches = abc_dict['branches']
-                        conditionals = abc_dict['conditionals']
-                        abc_metric = np.sqrt(assignments + branches + conditionals) #ABC metric computation
-                        #note the ABC score is rounded to the nearest tenth by convention
-                        code_metrics[filepath] = {'language': language,
-                                                  'assignments': assignments,
-                                                  'branches': branches,
-                                                  'conditionals': conditionals,
-                                                  'abc_metric': round(abc_metric,1).item(),
-                                                  'langs': langs}
-    return code_metrics
 
 
 def abc_full_analysis(abc_dict,
@@ -184,5 +152,4 @@ def estimate_ipl(assignments,branches,conditionals):
     bounds = {'upper': upper_bnd,
               'lower': lower_bnd}
     return bounds 
-
 

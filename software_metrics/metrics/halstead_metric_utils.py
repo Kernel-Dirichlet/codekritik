@@ -1,4 +1,5 @@
 from utils_main import *
+from loc_utils import fetch_lines
 import numpy as np
 import math
 import re
@@ -71,8 +72,7 @@ def compute_halstead_metrics(metrics):
     volume = program_length * math.log2(vocabulary_size)
     difficulty = (unique_operators_count / 2) * (total_operands_count / unique_operands_count) if unique_operands_count != 0 else 0
     effort = difficulty * volume
-    estimated_bugs = volume / 3000 #this will be rounded
-
+    estimated_bugs = int(volume // 3000) 
     return {
         "unique_operators": unique_operators_count,
         "unique_operands": unique_operands_count,
@@ -83,7 +83,7 @@ def compute_halstead_metrics(metrics):
         "volume": volume,
         "difficulty": difficulty,
         "effort": effort,
-        "estimated_bugs": round(estimated_bugs),
+        "estimated_bugs": estimated_bugs,
     }
 
 def halstead_process_directory(directory,
@@ -91,12 +91,12 @@ def halstead_process_directory(directory,
                                extensions_map,
                                hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                                asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                               llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                               ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     """Processes files in the specified directory and computes Halstead metrics."""
     langs = []
     halstead_metrics = {}
-
+    
     for root, dirs, files in os.walk(directory):
         for file in files:
             _, extension = os.path.splitext(file)
@@ -109,16 +109,23 @@ def halstead_process_directory(directory,
                         code_lines = code_file.readlines()
                     if language == 'Assembly':
                         regexes = json.load(open(asm_tokens))
+                        comments_json = asm_tokens
                     if language == 'LLVM':
-                        regexes = json.load(open(llvm_tokens))
+                        regexes = json.load(open(ir_tokens))
+                        comments_json = ir_tokens
                     else:
                         regexes = json.load(open(hll_tokens))
+                        comments_json = hll_tokens
                         
-                
+                source_code_lines = fetch_lines(lines = code_lines,
+                                                language = language,
+                                                comments_json = comments_json,
+                                                mode = 'source')
                 assignment_tokens = regexes[language]['assignments']
                 
-                ops_dict = parse_assignment(lines = code_lines,
+                ops_dict = parse_assignment(lines = source_code_lines,
                                             assignment_tokens = assignment_tokens)
+
                 halstead_results = compute_halstead_metrics(ops_dict)
                 halstead_metrics[file_path] = halstead_results
     
@@ -158,12 +165,3 @@ def halstead_full_analysis(halstead_dict,extensions_map):
                           'language_dict': lang_dict,
                           'file_dict': halstead_dict}
     return halstead_full_dict
-
-
-
-
-
-
-
-    
-

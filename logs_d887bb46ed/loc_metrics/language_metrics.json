@@ -1,0 +1,98 @@
+{
+    "Python": {
+        "loc": 1529,
+        "bloc": 272,
+        "sloc": 1131,
+        "cloc": 126
+    },
+    "Julia": {
+        "loc": 11,
+        "bloc": 2,
+        "sloc": 9,
+        "cloc": 0
+    },
+    "Objective-C": {
+        "loc": 9,
+        "bloc": 2,
+        "sloc": 7,
+        "cloc": 0
+    },
+    "Rust": {
+        "loc": 16,
+        "bloc": 3,
+        "sloc": 13,
+        "cloc": 0
+    },
+    "JavaScript": {
+        "loc": 1,
+        "bloc": 0,
+        "sloc": 1,
+        "cloc": 0
+    },
+    "Clojure": {
+        "loc": 1,
+        "bloc": 0,
+        "sloc": 1,
+        "cloc": 0
+    },
+    "FORTRAN": {
+        "loc": 4,
+        "bloc": 1,
+        "sloc": 3,
+        "cloc": 0
+    },
+    "Go": {
+        "loc": 8,
+        "bloc": 3,
+        "sloc": 5,
+        "cloc": 0
+    },
+    "Bash": {
+        "loc": 3,
+        "bloc": 1,
+        "sloc": 1,
+        "cloc": 1
+    },
+    "C": {
+        "loc": 7,
+        "bloc": 2,
+        "sloc": 5,
+        "cloc": 0
+    },
+    "TypeScript": {
+        "loc": 1,
+        "bloc": 0,
+        "sloc": 1,
+        "cloc": 0
+    },
+    "C#": {
+        "loc": 8,
+        "bloc": 2,
+        "sloc": 6,
+        "cloc": 0
+    },
+    "Java": {
+        "loc": 6,
+        "bloc": 1,
+        "sloc": 5,
+        "cloc": 0
+    },
+    "Haskell": {
+        "loc": 3,
+        "bloc": 1,
+        "sloc": 2,
+        "cloc": 0
+    },
+    "C++": {
+        "loc": 7,
+        "bloc": 2,
+        "sloc": 5,
+        "cloc": 0
+    },
+    "LLVM": {
+        "loc": 941,
+        "bloc": 51,
+        "sloc": 65,
+        "cloc": 825
+    }
+}

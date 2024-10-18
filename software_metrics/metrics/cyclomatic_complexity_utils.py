@@ -2,6 +2,7 @@ import json
 import re
 import os
 from utils_main import * 
+from loc_utils import fetch_lines
 
 def dfs(node,visited,graph):
     stack = [node]
@@ -83,29 +84,6 @@ def analyze_code_lines(code_lines, patterns):
 
     return nodes, edges
 
-def build_cfg_ascii(nodes, edges):
-    node_positions = {node: i for i, (node, _) in enumerate(nodes)}
-    max_position = max(node_positions.values())
-    
-    cfg_ascii = [""] * (max_position + 1)
-    for node, label in nodes:
-        pos = node_positions[node]
-        cfg_ascii[pos] += f"{node} [{label}]"
-    
-    for from_node, to_node, direction in edges:
-        from_pos = node_positions[from_node]
-        to_pos = node_positions[to_node]
-        
-        if direction == "right":
-            cfg_ascii[from_pos] += " -> " + cfg_ascii[to_pos]
-        elif direction == "left":
-            cfg_ascii[to_pos] = cfg_ascii[from_pos] + " <- " + cfg_ascii[to_pos]
-        elif direction == "up":
-            cfg_ascii[to_pos] = f" ^\n| \n{cfg_ascii[to_pos]}"
-        elif direction == "down":
-            cfg_ascii[from_pos] += f"\n|\nv \n{cfg_ascii[to_pos]}"
-    
-    return "\n".join(cfg_ascii)
 
 def compute_cyclomatic_complexity(code_lines,
                                   language,
@@ -122,15 +100,48 @@ def compute_cyclomatic_complexity(code_lines,
 
     return {
         "cyclomatic_complexity": cyclomatic_complexity,
-        "cfg": cfg_ascii
+        "control_flow_graph": cfg_ascii
     }
+
+def build_cfg_ascii(nodes, edges):
+    # Map each node to its position for rendering
+    node_positions = {node: i for i, (node, label) in enumerate(nodes)}
+    max_position = max(node_positions.values())
+
+    # Initialize empty lines for the ASCII graph
+    cfg_ascii = [""] * (max_position + 1)
+
+    # Add nodes to the ASCII representation, encoding each with its label
+    for node, label in nodes:
+        pos = node_positions[node]
+        cfg_ascii[pos] += f"[{label}]"
+
+    # Add edges to connect nodes with directionality
+    for from_node, to_node, direction in edges:
+        from_pos = node_positions[from_node]
+        to_pos = node_positions[to_node]
+
+        if direction == "right":
+            cfg_ascii[from_pos] += f" --[{to_node}]--> "
+        elif direction == "left":
+            cfg_ascii[to_pos] = f"<--[{from_node}]-- " + cfg_ascii[to_pos]
+        elif direction == "up":
+            cfg_ascii[to_pos] = f"  ^\n  |\n[{to_node}]" + cfg_ascii[to_pos]
+        elif direction == "down":
+            cfg_ascii[from_pos] += f"\n  |\n  v\n[{to_node}]"
+
+    # Join all lines into a single string for final output
+    return "\n".join(cfg_ascii)
+
+
+
 
 def cc_process_directory(directory,
                          extensions_to_count,
                          extensions_map,
                          hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                          asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                         llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                         ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     langs, cc_dict = [], {}
     for root,dirs,files in os.walk(directory):
@@ -145,12 +156,20 @@ def cc_process_directory(directory,
                         code_lines = code_file.readlines()
                     if language == 'Assembly':
                         lang_dict = json.load(open(asm_tokens))
+                        comments_json = asm_tokens
                     if language == 'LLVM':
-                        lang_dict = json.load(open(llvm_tokens))
+                        lang_dict = json.load(open(ir_tokens))
+                        comments_json = ir_tokens
                     else:
                         lang_dict = json.load(open(hll_tokens))
+                        comments_json = hll_tokens
+                    
+                    source_code_lines = fetch_lines(lines = code_lines,
+                                                    language = language,
+                                                    comments_json = comments_json,
+                                                    mode = 'source')
 
-                    results = compute_cyclomatic_complexity(code_lines = code_lines,
+                    results = compute_cyclomatic_complexity(code_lines = source_code_lines,
                                                             language = language,
                                                             lang_dict = lang_dict)
                     cc_dict[file_path] = results
@@ -177,8 +196,4 @@ def cc_full_analysis(cc_dict,extensions_map):
                  'language_dict': lang_dict,
                  'global_dict': global_dict}
     return full_dict
-
-
-
-
 

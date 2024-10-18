@@ -2,14 +2,19 @@ import os
 import json
 from utils_main import * 
 
-def count_lines(lines, language, json_file):
+
+def fetch_lines(lines,
+                language,
+                comments_json,
+                mode = 'count'):
     
-    with open(json_file, 'r') as f:
+    assert mode in ['count','source'] 
+
+    with open(comments_json, 'r') as f:
         comment_data = json.load(f)
 
     if language not in comment_data:
-        raise ValueError(f"Language {language} is not supported in the JSON file")
-     
+        raise ValueError(f"Language {language} is not supported in the JSON file")     
     single_line_comment = comment_data[language]['comments'][0]
     multi_line_comment_start = comment_data[language]['comments'][1] if len(comment_data[language]['comments']) > 1 else None
     multi_line_comment_end = comment_data[language]['comments'][2] if len(comment_data[language]['comments']) > 2 else None
@@ -19,8 +24,9 @@ def count_lines(lines, language, json_file):
     source_lines = 0
     blank_lines = 0
     in_multi_line_comment = False
-
-    
+    if mode == 'source': 
+        sloc = []
+        
     for line in lines:
         total_lines += 1
         stripped_line = line.strip()
@@ -43,19 +49,28 @@ def count_lines(lines, language, json_file):
                 in_multi_line_comment = True
         else:
             source_lines += 1
+            if mode == 'source': 
+                sloc.append(line)
+    
+    if mode == 'source':
+        return sloc
 
-    return {
-        'loc': total_lines,
-        'cloc': comment_lines,
-        'sloc': source_lines,
-        'bloc': blank_lines
-    }
+    if mode == 'count':
+        loc_dict = {'loc': total_lines,
+                    'cloc': comment_lines,
+                    'sloc': source_lines,
+                    'bloc': blank_lines}
+        return loc_dict
+
+
+
 def count_lines_of_code(directory, 
                         extensions_to_count,
                         extensions_map,
+                        mode = 'count',
                         hll_tokens = '../run_metrics/metrics_cfgs/hll_tokens.json',
                         asm_tokens = '../run_metrics/metrics_cfgs/asm_tokens.json',
-                        llvm_tokens = '../run_metrics/metrics_cfgs/llvm_tokens.json'):
+                        ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     langs = []
     loc_file_dict = {}
@@ -76,22 +91,26 @@ def count_lines_of_code(directory,
                     print('error reading file, likely a binary, skipping...')
                     continue
                 if language == 'Assembly':
-                    loc_dict = count_lines(lines = code_lines,
+                    loc_dict = fetch_lines(lines = code_lines,
                                            language = language,
-                                           json_file = asm_tokens)
+                                           comments_json = asm_tokens,
+                                           mode = mode)
                 if language == 'LLVM':
-                    loc_dict = count_lines(lines = code_lines,
+                    loc_dict = fetch_lines(lines = code_lines,
                                            language = language,
-                                           json_file = llvm_tokens)
+                                           comments_json = ir_tokens,
+                                           mode = mode)
                 else:
-                    loc_dict = count_lines(lines = code_lines,
+                    loc_dict = fetch_lines(lines = code_lines,
                                            language = language,
-                                           json_file = hll_tokens)
+                                           comments_json = hll_tokens,
+                                           mode = mode)
                 loc_file_dict[file] = loc_dict
     return loc_file_dict
 
                     
-def loc_full_analysis(loc_dict,extensions_map):
+def loc_full_analysis(loc_dict,
+                      extensions_map):
     lang_dict = {}
     files = list(loc_dict.keys())
     for i,file in enumerate(files):
@@ -104,6 +123,7 @@ def loc_full_analysis(loc_dict,extensions_map):
                                'bloc': 0,
                                'sloc': 0,
                                'cloc': 0}
+            
         if lang in lang_dict.keys():
             for key in loc_dict[file].keys():
                 lang_dict[lang][key] += loc_dict[file][key]
@@ -120,9 +140,7 @@ def loc_full_analysis(loc_dict,extensions_map):
         for key in global_dict.keys():
             percentage_dict[lang][key] = (lang_dict[lang][key] / global_dict[key]) * 100
         
-    
-
-        
+         
     #now get LOC percentage per language
     loc_full_dict = {'global_dict': global_dict,
                      'language_dict': lang_dict,
