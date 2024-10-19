@@ -1,4 +1,6 @@
 # CodeKritik
+
+
 ## Version 0.1.0
 This repository aims to provide a suite of static analysis tools to analyze code complexity. This is currently a collection of known heuristics, but will evolve with time to include aggregate metrics which take into account lower level metrics. 
 
@@ -64,4 +66,25 @@ Despite known limitations, software metrics provide a way to analyze code object
 4) Include Git repository metrics like churn 
 5) Additional Documentation
 6) Dockerization
-7) Development of more informative metrics which intelligently aggregate and built on the existing ones 
+7) Development of more informative metrics which intelligently aggregate and built on the existing ones
+
+## License
+
+This software is available under a **dual-license** model:
+
+1. **GNU Affero General Public License (AGPL) v3**:
+   - This software is open-source and licensed under the AGPL v3.
+   - You are free to use, modify, and distribute the software in open-source and non-commercial projects, provided that any modifications are also distributed under the AGPL license and made available to the public.
+
+   For more details, see the [LICENSE](./LICENSE) file.
+
+2. **Commercial License**:
+   - If you intend to use this software in a **commercial application** or as part of a proprietary product, you must obtain a commercial license.
+   - The commercial license allows you to use the software without the obligation to release your modifications under the AGPL.
+
+   To inquire about commercial licensing, please contact:
+
+   - **Email**: elliottdev93@gmail.com
+   - **Website**: TBD
+
+By using this software for commercial purposes without a commercial license, you are in violation of the terms of this repository.
