@@ -37,11 +37,7 @@ Under `metrics_cfgs` there are several key files -
    
 ### Experimental features
 
-The metrics used here are themselves not novel, and fall under the umbrella of static analysis code tools. That said, higher abstraction constructs like relationships between objects, functions, and polymorphic types deserve further exploration. The current version has a file under `/software_metrics/experimental/func_programming_utils.py` which inputs a python file, and does the following
-1) Computes number of higher order functions
-2) Degree of each higher order function
-3) ASCII diagrams showing relationships between the functions in the file
-4) In-degree and out-degree using the Network-X Graph Library.
+The metrics used here are themselves not novel, and fall under the umbrella of static analysis code tools. That said, higher abstraction constructs like relationships between objects, functions, and polymorphic types deserve further exploration. These will be found under `software_metrics/metrics/experimental`
 
 More sophisticated features will be added in future releases, like object dependency injections, as well as code which will automatically perform dependency inversion and Inversion-of-Control (IoC) for classes
 
