@@ -1,8 +1,8 @@
 # CodeKritik
-## Version 1.0.0
+## Version 0.1.0
 This repository aims to provide a suite of static analysis tools to analyze code complexity. This is currently a collection of known heuristics, but will evolve with time to include aggregate metrics which take into account lower level metrics. 
 
-Unlike other code metrics related repos at the time of writing, this one computes software complexity by *file* and *language* in addition to a global aggregate score across all files & languages in a given codebase. There is support for over 20 languages, including low-level assembly languages like MIPS, ARM and PowerPC. Please note this is release 1.0.0 and is *not* recommended for production (yet). 
+Unlike other code metrics related repos at the time of writing, this one computes software complexity by *file* and *language* in addition to a global aggregate score across all files & languages in a given codebase. There is support for over 20 languages, including low-level assembly languages like MIPS, ARM and PowerPC. Please note this is release 0.1.0 and is *not* recommended for production (yet). 
 
 | Level       | Languages                     |
 |-------------|---------------------------------- |
@@ -56,7 +56,7 @@ Despite known limitations, software metrics provide a way to analyze code object
 2) **GitHub Actions & MR denial/approval** -> When someone submits an MR, it is possible to set up a git diff between the branch of interest and the MR branch and automatically deny an MR if the MR adds too much complexity to the codebase. In conjunction with established best practices, this can significantly improve long term maintainability of large scale projects. A simple GitHub action for CI can be setup to enforce this policy 
 3) **Downstream automated code tooling** -> because CodeKritik provides complexity metrics at the file, language and global level, tools that automatically generate unit tests, code linters, and LLM powered refactoring tools can focus on relevant subsets of the codebase. 
 
-### Roadmap to 1.1.0
+### Roadmap to 0.2.0
 
 1) Proper unit tests for all metrics across all languages
 2) When computing metrics for IR, ensure Gimble, not just LLVM is supported
