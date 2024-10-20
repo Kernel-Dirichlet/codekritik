@@ -1,6 +1,8 @@
 import sys
 import os
 
+#script_dir = os.path.dirname(os.path.abspath(__file__))
+#sys.path.append(os.path.join(script_dir,'software_metrics','metrics','metrics_cfgs'))
 sys.path.append('software_metrics/metrics')
 
 from loc_utils import *
