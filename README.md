@@ -1,10 +1,12 @@
 # CodeKritik
 
 
-## Version 0.1.0
+## Version 0.2.0
 This repository aims to provide a suite of static analysis tools to analyze code complexity. This is currently a collection of known heuristics, but will evolve with time to include aggregate metrics which take into account lower level metrics. 
 
-Unlike other code metrics related repos at the time of writing, this one computes software complexity by *file* and *language* in addition to a global aggregate score across all files & languages in a given codebase. There is support for over 20 languages, including low-level assembly languages like MIPS, ARM and PowerPC. Please note this is release 0.1.0 and is *not* recommended for production (yet). 
+Unlike other code metrics related repos at the time of writing, this one computes software complexity by *file* and *language* in addition to a global aggregate score across all files & languages in a given codebase. There is support for over 20 languages, including low-level assembly languages like MIPS, ARM and PowerPC. Please note this is release 0.2.0 and is *not* recommended for production (yet). 
+
+CodeKritik provides some support for running metrics on arbitrary Git repositories via URL and locally. The idea is the complexity metrics are computed across *every* hash within a specified date range, *and will soon provide a breakdown of git stats by users*. Refer to documentation below. 
 
 | Level       | Languages                     |
 |-------------|---------------------------------- |
@@ -14,9 +16,22 @@ Unlike other code metrics related repos at the time of writing, this one compute
 
 ## Usage
 
-Usage is simple, simply pass in a directory as a command-line argument to `runner.py --dir <directory>`
+Usage is simple, simply pass in a directory as a command-line argument to `python3 static_analyzer.py --dir <directory>` when running on a local directory.
 
-This creats a directory `logs_<hash>` and under each of those, there is a directory for each metric, further broken down by file and language. The exception to this is the maintainability index which is directly under `logs`. 
+
+When evaluating across git history, execute
+
+`python3 git_history_analysis.py --repo_url <git_url> --since MM-DD-YYYY --until MM-DD-YYYY --branch <branch of choice>`. 
+
+Under the hood, this calls the `static_analyzer.py` file on the checked out code for all commits within the specified date range on the given branch. 
+
+**KNOWN BUGS**:  There is a known bug where this code will fail if the target branch/repository does not contain *any* of the 20 languages. Specifically, if none of the file extensions match to a language, the code fails. There is also a division-by-zero error which sometimes occurs. These issues will be both be fixed by version 0.2.2. These bugs are not the most exhaustive, but are by far the most common. A detailed bugs section will be added to the README in a future release. 
+
+A directory of the form `logs_<hash>` is created when running `static_analyzer.py`
+
+Under each of these, there is a directory for each metric, broken down at three levels of granularity - file, language, and global. The exception to this is the maintainability index which is directly under `logs`. When running across history, the directory structure becomes
+
+`/repo_stats/<branch>/<date>/<commit_hash>/logs_<hash>/...`
 
 Under `metrics_cfgs` there are several key files -
   1) `lang_regexes.json`. This file contains operators, keywords etc. which allow for pattern matching. This makes extending the complexity metrics calculation across languages trivial (even experimental ones) - simply add another key to the JSON file containing the patterns for all syntatic tokens of interest. 
@@ -54,16 +69,15 @@ Despite known limitations, software metrics provide a way to analyze code object
 2) **GitHub Actions & MR denial/approval** -> When someone submits an MR, it is possible to set up a git diff between the branch of interest and the MR branch and automatically deny an MR if the MR adds too much complexity to the codebase. In conjunction with established best practices, this can significantly improve long term maintainability of large scale projects. A simple GitHub action for CI can be setup to enforce this policy 
 3) **Downstream automated code tooling** -> because CodeKritik provides complexity metrics at the file, language and global level, tools that automatically generate unit tests, code linters, and LLM powered refactoring tools can focus on relevant subsets of the codebase. 
 
-### Roadmap to 0.2.0
+### Roadmap to 0.3.0
 
 1) Proper unit tests for all metrics across all languages
 2) When computing metrics for IR, ensure Gimble, not just LLVM is supported
 3) Create GitHub action so this code can be run as part of CI
-4) Include Git repository metrics like churn 
-5) Additional Documentation
-6) Dockerization
-7) Development of more informative metrics which intelligently aggregate and built on the existing ones
+4) Include user Git metrics like code churn
+5) Dockerization
 
+ 
 ## License
 
 This software is available under a **dual-license** model:
