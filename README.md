@@ -2,9 +2,26 @@
 
 
 ## Version 0.2.0
-This repository aims to provide a suite of static analysis tools to analyze code complexity. This is currently a collection of known heuristics, but will evolve with time to include aggregate metrics which take into account lower level metrics. 
 
-Unlike other code metrics related repos at the time of writing, this one computes software complexity by *file* and *language* in addition to a global aggregate score across all files & languages in a given codebase. There is support for over 20 languages, including low-level assembly languages like MIPS, ARM and PowerPC. Please note this is release 0.2.0 and is *not* recommended for production (yet). 
+As of 10/25/2024, this project aims to provide a comprehensive suite of software analysis tools that will exceed that of [Sonarqube](https://www.sonarsource.com/products/sonarqube/) and be easy to integrate into LLM/AI agent workflows. **This project's goals are evolving somewhat along with the version number. Every effort will be made to provide as much documentation as time permits on current functionality, known bugs, and future plans.**
+
+The software analysis is broken down into three primary stages, with each stage building on the preceeding one: 
+
+1) **Static Analysis** - This suite of tools uses common known code complexity metrics/heuristics like ABC score, cyclomatic complexity, and others for **arbitrary** programming languages with little to no configuration. In addition to the well-known measures, there will be experimental features to measure how well code adheres to functional programming (FP) and Object-Oriented Programming (OOP) principles. These features are useful because they can be combined with code linters to perform dependency inversion in the case of OOP, and monad construction in the case of FP. These additional features will be an optional flag that will not run by default. Code linters to actually transform code may or may not be within the scope of this project and will be revisited at a later time. 
+
+2) **Git history analysis** - This provides tools for analyzing git branches and git hashes for arbitrary commits. This works by either pointing to a github accessible via URL or a git repository accessible from a local host. This works by running the static analysis tools on specified git branches and/or commits, allowing users to chart out the complexity of a software over time. In addition to calculating code complexiy for any git project at any point in its history, additional metrics analyzing project contributor stats are also provided. Metrics like code churn, average length of time for a MR, and longest time between commits are tracked for *every* user as well as globally. End users of Codekritik will then be provided with aggregate information giving them deep insights into current and future maintability of a project from a code standpoint and a maintainer standpoint. 
+
+3) **ML analysis** - The purpose of ML in this project is to compute a "Temporal Maintainability Metric" (TMI) which will be a project's maintainability over time. This metric is meant to inform how attractive a code base is as a dependency in other projects, ease of use etc. Unlike the well known code complexity metrics found in the static analysis tools, TMI aims to be a data-driven metric rather than a manual collection of heuristics. A neural network will compute TMI as a non-linear mapping of static code heuristics to TMI. The model itself can be serialized and can be run as a linux service or cronjob in the deployment stage for inference.
+
+
+### Dynamic Analysis?? ###
+
+There may be tools to create virtualized environments and trace out a program execution. If this is to be undertaken, it will also provide Big-O run-time of algorithms it can detect, and perhaps refactor that code in simple enough cases. If this is done, it will be in Codekritik v2.0.0 or greater. 
+
+
+### Overview 
+
+Unlike other code metrics related repos at the time of writing, this one computes software complexity by *file* and *language* in addition to a global aggregate score across all files & languages in a given codebase. There is support for over 20 languages, including low-level assembly languages like MIPS, ARM and PowerPC. **Please note this is release 0.2.0 and is *not* recommended for production (yet)**
 
 CodeKritik provides some support for running metrics on arbitrary Git repositories via URL and locally. The idea is the complexity metrics are computed across *every* hash within a specified date range, *and will soon provide a breakdown of git stats by users*. Refer to documentation below. 
 
