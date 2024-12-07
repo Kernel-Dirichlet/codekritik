@@ -74,7 +74,7 @@ def abc_process_directory(directory,
                     code_lines = code_file.readlines()
                     if language == 'Assembly':
                         comments_json = asm_tokens
-                    if language == 'LLVM':
+                    if language in ['LLVM','IR_GROUP']:
                         comments_json = ir_tokens
                     else:
                         comments_json = hll_tokens
@@ -91,7 +91,7 @@ def abc_process_directory(directory,
                                     language = language,
                                     lines = source_code_lines)
                 
-            if language == 'LLVM':
+            if language in ['LLVM', 'IR_GROUP']:
                 abc_dict = get_abcs(json_file = ir_tokens,
                                     language = language,
                                     lines = source_code_lines)

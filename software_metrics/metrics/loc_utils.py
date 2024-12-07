@@ -12,9 +12,6 @@ def fetch_lines(lines,
 
     with open(comments_json, 'r') as f:
         comment_data = json.load(f)
-
-    if language not in comment_data:
-        raise ValueError(f"Language {language} is not supported in the JSON file")     
     single_line_comment = comment_data[language]['comments'][0]
     multi_line_comment_start = comment_data[language]['comments'][1] if len(comment_data[language]['comments']) > 1 else None
     multi_line_comment_end = comment_data[language]['comments'][2] if len(comment_data[language]['comments']) > 2 else None
@@ -91,18 +88,25 @@ def count_lines_of_code(directory,
                     print('error reading file, likely a binary, skipping...')
                     continue
                 if language == 'Assembly':
+                    #no comments allowed in assembly files
+                    lang = detect_assembly_language(' '.join(code_lines))
                     loc_dict = fetch_lines(lines = code_lines,
-                                           language = language,
+                                           language = lang,
                                            comments_json = asm_tokens,
                                            mode = mode)
-                if language == 'LLVM':
+                    
+                if language in ['LLVM', 'IR_GROUP']:
+                    #no comments allowed in IR files
+                    lang = detect_ir_language(' '.join(code_lines))
                     loc_dict = fetch_lines(lines = code_lines,
-                                           language = language,
+                                           language = lang,
                                            comments_json = ir_tokens,
                                            mode = mode)
-                else:
+                
+                if language not in ['Assembly', 'IR_GROUP','LLVM']:
+                    lang = language
                     loc_dict = fetch_lines(lines = code_lines,
-                                           language = language,
+                                           language = lang,
                                            comments_json = hll_tokens,
                                            mode = mode)
                 loc_file_dict[file] = loc_dict

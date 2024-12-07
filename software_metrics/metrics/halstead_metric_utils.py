@@ -110,18 +110,21 @@ def halstead_process_directory(directory,
                     if language == 'Assembly':
                         regexes = json.load(open(asm_tokens))
                         comments_json = asm_tokens
-                    if language == 'LLVM':
+                        lang_ = detect_assembly_language(' '.join(code_lines))
+                    if language in ['LLVM','IR_GROUP']:
                         regexes = json.load(open(ir_tokens))
                         comments_json = ir_tokens
-                    else:
+                        lang_ = detect_ir_language(' '.join(code_lines))
+                    if language not in ['LLVM','IR_GROUP','Assembly']:
                         regexes = json.load(open(hll_tokens))
                         comments_json = hll_tokens
+                        lang_ = language
                         
                 source_code_lines = fetch_lines(lines = code_lines,
-                                                language = language,
+                                                language = lang_,
                                                 comments_json = comments_json,
                                                 mode = 'source')
-                assignment_tokens = regexes[language]['assignments']
+                assignment_tokens = regexes[lang_]['assignments']
                 
                 ops_dict = parse_assignment(lines = source_code_lines,
                                             assignment_tokens = assignment_tokens)
@@ -138,6 +141,7 @@ def halstead_full_analysis(halstead_dict,extensions_map):
     for i,file in enumerate(files):
         ext = '.' + file.split('.')[-1]
         lang = get_language_for_extension(extensions_map,ext)
+        
         if lang == 'Unknown':
             continue
         if lang not in lang_dict.keys():

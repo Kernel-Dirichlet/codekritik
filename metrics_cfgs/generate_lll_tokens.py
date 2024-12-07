@@ -49,16 +49,6 @@ Z80_CONDITIONALS = ["cp", "and", "or", "xor", "sub", "dec", "inc"]
 Z80_LOOPS = ["djnz", "jp", "jr", "call"]  # Z80 uses conditional jumps for loops
 Z80_COMMENTS = [';']
 
-# Create LLVM dictionary
-llvm_dict = {
-    "LLVM": {
-        "assignments": LLVM_ASSIGNMENTS,
-        "branches": LLVM_BRANCHES,
-        "conditionals": LLVM_CONDITIONALS,
-        "loops": LLVM_LOOPS,
-        "comments": LLVM_COMMENTS
-    }
-}
 
 # Create assembly languages dictionary
 asm_dict = {
@@ -117,5 +107,5 @@ asm_dict = {
 with open('asm_tokens.json', 'w') as asm_file:
     json.dump(asm_dict, asm_file, indent=4)
 
-print("LLVM and assembly instructions JSON files have been generated.")
+print("Assembly instructions JSON file has been generated.")
 

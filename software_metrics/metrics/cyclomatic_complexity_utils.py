@@ -157,20 +157,23 @@ def cc_process_directory(directory,
                     if language == 'Assembly':
                         lang_dict = json.load(open(asm_tokens))
                         comments_json = asm_tokens
-                    if language == 'LLVM':
+                        lang_ = detect_assembly_language(' '.join(code_lines))
+                    if language in ['LLVM','IR_GROUP']:
                         lang_dict = json.load(open(ir_tokens))
                         comments_json = ir_tokens
-                    else:
+                        lang_ = detect_ir_language(' '.join(code_lines))
+                    if language not in ['LLVM','IR_GROUP','Assembly']:
                         lang_dict = json.load(open(hll_tokens))
                         comments_json = hll_tokens
+                        lang_ = language
                     
                     source_code_lines = fetch_lines(lines = code_lines,
-                                                    language = language,
+                                                    language = lang_,
                                                     comments_json = comments_json,
                                                     mode = 'source')
 
                     results = compute_cyclomatic_complexity(code_lines = source_code_lines,
-                                                            language = language,
+                                                            language = lang_,
                                                             lang_dict = lang_dict)
                     cc_dict[file_path] = results
     return cc_dict
