@@ -1,4 +1,5 @@
 import argparse
+import json
 import os
 import shutil
 import sys
@@ -7,8 +8,10 @@ from datetime import datetime
 from repo_utils.git_code_utils import (
     fetch_git_history_between_dates,
     clone_repository,
-    get_all_branches
+    get_all_branches,
 )
+
+from repo_utils.git_utils import get_active_users, create_user_commit_jsons
 
 def main():
     # Argparse setup
@@ -26,10 +29,16 @@ def main():
                         help = "Branch name. Use 'all' to loop over all branches (default is 'main')")
 
     parser.add_argument('--repo_url',
+                        required = True,
                         help = "The URL of the remote git repository")
 
-    parser.add_argument('--local_path',
-                        help = "The local path to the git repository (if using a local repository)")
+    parser.add_argument('--write-user-info',
+                        action='store_true',
+                        help='Write per-user lines added/removed info to user_info.json')
+
+    parser.add_argument('--user-info-output',
+                        default='./repo_analysis/user_info.json',
+                        help='Path to write the user info JSON file (default: ./repo_analysis/user_info.json)')
 
     args = parser.parse_args()
 
@@ -51,71 +60,76 @@ def main():
 
     branch_name = args.branch
     repo_url = args.repo_url
-    local_path = args.local_path
+    # Base path for storing analysis outputs
+    REPO_ANALYSIS_BASE = './repo_analysis'  # Ensure this directory exists or can be created and is writable
+
+    # Optionally build per-user commit dicts (in-memory) and write per-user JSONs
+    if args.write_user_info:
+        branch_for_info = branch_name if branch_name != 'all' else 'main'
+        print(f"Building per-user commit data for branch '{branch_for_info}' (in-memory) and writing to {os.path.join(REPO_ANALYSIS_BASE, 'users')}...")
+        try:
+            user_commit_dicts = create_user_commit_jsons(repo_url=repo_url, branch=branch_for_info, since=args.since, until=args.until)
+            # write per-user files
+            users_base = os.path.join(REPO_ANALYSIS_BASE, 'users')
+            os.makedirs(users_base, exist_ok=True)
+            for author, commits in user_commit_dicts.items():
+                safe = ''.join(c if c.isalnum() or c in '._-' else '_' for c in author)
+                user_dir = os.path.join(users_base, safe)
+                os.makedirs(user_dir, exist_ok=True)
+                out_path = os.path.join(user_dir, 'user_commits.json')
+                try:
+                    with open(out_path, 'w') as fh:
+                        json.dump({'user': author, 'commits': commits}, fh, indent=2)
+                except Exception as e:
+                    print(f"Failed to write user commits for {author}: {e}")
+        except Exception as e:
+            print(f"Failed to create per-user commit JSONs: {e}")
 
     # Ensure STATIC_ANALYZER_PATH is correctly set
     ORIGINAL_WORKING_DIR = os.getcwd()
     STATIC_ANALYZER_DIR = ORIGINAL_WORKING_DIR
     STATIC_ANALYZER_PATH = os.path.join(STATIC_ANALYZER_DIR, 'static_analyzer.py')
 
-    # Hard-code the repo_stats_base path
-    REPO_STATS_BASE = './repo_stats'  #i Ensure this directory exists or can be created and is writable
+    # Hard-code the repo_analysis path
+    REPO_ANALYSIS_BASE = './repo_analysis'  # Ensure this directory exists or can be created and is writable
 
     # Informative print statements
     print(f"\n========== Git Commit Analysis ==========")
     print(f"START DATE      : {start_date}")
     print(f"END DATE        : {end_date}")
     print(f"BRANCH          : {branch_name}")
-    print(f"REPO URL        : {repo_url if repo_url else 'Using local repository'}")
-    print(f"LOCAL PATH      : {local_path if local_path else 'None'}")
-    print(f"REPO_STATS_BASE : {REPO_STATS_BASE}")
+    print(f"REPO URL        : {repo_url}")
+    print(f"REPO_ANALYSIS_BASE : {REPO_ANALYSIS_BASE}")
     print("==========================================\n")
 
     # Get list of branches
     if branch_name == 'all':
-        if repo_url:
-            # Clone the repository to get the list of branches
-            temp_repo_path = "/tmp/git_repo_clone_temp"
-            if os.path.exists(temp_repo_path):
-                shutil.rmtree(temp_repo_path)
-            clone_repository(repo_url, temp_repo_path)
-            branches = get_all_branches(temp_repo_path)
+        # Clone the repository to get the list of branches
+        temp_repo_path = "/tmp/git_repo_clone_temp"
+        if os.path.exists(temp_repo_path):
             shutil.rmtree(temp_repo_path)
-        elif local_path:
-            branches = get_all_branches(local_path)
-        else:
-            raise ValueError("Either repo_url or local_path must be provided.")
+        clone_repository(repo_url, temp_repo_path)
+        branches = get_all_branches(temp_repo_path)
+        shutil.rmtree(temp_repo_path)
     else:
         branches = [branch_name]
 
     # Process each branch
     for branch in branches:
         print(f"\nProcessing branch: {branch}")
+        
+        # Clone the repository into a temporary directory for the branch
+        branch_repo_path = f"./tmp/_{branch}"
+        if os.path.exists(branch_repo_path):
+            shutil.rmtree(branch_repo_path)
+        clone_repository(repo_url, branch_repo_path)
 
-        # Fetch git history for the branch
-        if repo_url:
-            # Clone the repository into a temporary directory for the branch
-            branch_repo_path = f"./tmp/git_repo_branch_{branch}"
-            if os.path.exists(branch_repo_path):
-                shutil.rmtree(branch_repo_path)
-            clone_repository(repo_url, branch_repo_path)
+        # Checkout the branch
+        subprocess.run(['git', 'checkout', branch], check=True, cwd=branch_repo_path)
 
-            # Checkout the branch
-            subprocess.run(['git', 'checkout', branch], check=True, cwd=branch_repo_path)
-
-            git_history, _ = fetch_git_history_between_dates(
-                start_date, end_date, branch, repo_url=None, local_path=branch_repo_path
-            )
-        elif local_path:
-            # Use the local repository path
-            branch_repo_path = local_path
-            # Checkout the branch
-            subprocess.run(['git', 'checkout', branch], check=True, cwd=branch_repo_path)
-            git_history, _ = fetch_git_history_between_dates(
-                start_date, end_date, branch, repo_url=None, local_path=branch_repo_path
-            )
-        else:
-            raise ValueError("Either repo_url or local_path must be provided.")
+        git_history, _ = fetch_git_history_between_dates(
+            start_date, end_date, branch, repo_url=None, local_path=branch_repo_path
+        )
 
         # Process each commit in the branch
         for line in git_history:
@@ -127,21 +141,15 @@ def main():
                 print(f"\nProcessing commit {commit_hash} by {author} on {commit_date}")
 
                 try:
-                    # Clone the repository for this commit
-                    commit_repo_path = f"/tmp/git_repo_commit_{commit_hash}"
-                    if os.path.exists(commit_repo_path):
-                        shutil.rmtree(commit_repo_path)
-                    clone_repository(repo_url, commit_repo_path)
-
-                    # Checkout the specific commit
-                    subprocess.run(['git', 'checkout', commit_hash], check=True, cwd=commit_repo_path)
+                    # Checkout the specific commit in the branch repo
+                    subprocess.run(['git', 'checkout', commit_hash], check=True, cwd=branch_repo_path)
 
                     # Verify the current commit
                     result = subprocess.run(
                         ['git', 'rev-parse', 'HEAD'],
                         capture_output=True,
                         text=True,
-                        cwd=commit_repo_path
+                        cwd=branch_repo_path
                     )
                     current_commit = result.stdout.strip()
                     if current_commit != commit_hash:
@@ -157,9 +165,9 @@ def main():
                             if os.path.isdir(item_path):
                                 shutil.rmtree(item_path)
 
-                    # Create the /repo_stats/<branch>/<date>/<hash> directory for the logs
-                    commit_stats_dir = os.path.join(REPO_STATS_BASE, branch, commit_date, commit_hash)
-                    os.makedirs(commit_stats_dir, exist_ok=True)
+                    # Create the /repo_analysis/<branch>/<date>/<hash> directory for the logs
+                    commit_analysis_dir = os.path.join(REPO_ANALYSIS_BASE, branch, commit_date, commit_hash)
+                    os.makedirs(commit_analysis_dir, exist_ok=True)
 
                     # Prepare environment variables
                     env = os.environ.copy()
@@ -167,32 +175,74 @@ def main():
 
                     # Run static_analyzer.py from its own directory
                     subprocess.run(
-                        ['python', STATIC_ANALYZER_PATH, '--dir', commit_repo_path],
+                        ['python', STATIC_ANALYZER_PATH, '--dir', branch_repo_path],
                         check=True,
                         cwd=STATIC_ANALYZER_DIR,
                         env=env
                     )
 
-                    # Move logs from where static_analyzer.py outputs them to commit_stats_dir
+                    # Move logs from where static_analyzer.py outputs them to commit_analysis_dir
                     for item in os.listdir(STATIC_ANALYZER_DIR):
                         if item.startswith('logs_'):
                             item_path = os.path.join(STATIC_ANALYZER_DIR, item)
                             if os.path.isdir(item_path):
-                                shutil.move(item_path, commit_stats_dir)
-                                print(f"Logs moved to: {commit_stats_dir}")
-
-                    # Clean up the cloned repository for this commit
-                    shutil.rmtree(commit_repo_path)
+                                shutil.move(item_path, commit_analysis_dir)
+                                print(f"Logs moved to: {commit_analysis_dir}")
 
                 except Exception as e:
                     print(f"Error processing commit {commit_hash}: {e}")
-
-        # Clean up the cloned repository for the branch
-        if repo_url and os.path.exists(branch_repo_path):
+        
+        users = get_active_users(branch_repo_path, start_date, end_date, branch)
+        formatted_users = [user.replace(' ','_').lower() for user in users]
+        
+        human_users = [user for user in formatted_users if "[bot]" not in user]
+        bots = [user for user in formatted_users if "[bot]" in user]
+        formatted_bots = [bot.split('[')[0].strip() for bot in bots]
+        for user in human_users:
+            if not os.path.exists(os.path.join(REPO_ANALYSIS_BASE, branch, 'users')):
+                os.makedirs(os.path.join(REPO_ANALYSIS_BASE, branch, 'users'))
+                os.makedirs(os.path.join(REPO_ANALYSIS_BASE, branch, 'users', user))
+        
+        for bot in formatted_bots:
+            if not os.path.exists(os.path.join(REPO_ANALYSIS_BASE, branch, 'bots')):
+                os.makedirs(os.path.join(REPO_ANALYSIS_BASE, branch, 'bots'))
+                os.makedirs(os.path.join(REPO_ANALYSIS_BASE, branch, 'bots', bot))
+           
+        # Build per-user commit JSONs for this branch and write them into the branch-specific users directory
+        try:
+            per_user_commits = create_user_commit_jsons(local_path = branch_repo_path,
+                                                        branch = branch, 
+                                                        since = args.since, until=args.until)
+            #import pdb ; pdb.set_trace()
+            users_base_branch = os.path.join(REPO_ANALYSIS_BASE,
+             branch,
+             'users')
+            os.makedirs(users_base_branch, exist_ok=True)
+            for author, commits in per_user_commits.items():
+                if '[bot]' in author:
+                    formatted_author = author.split('[')[0].strip()
+                    user_dir = os.path.join(REPO_ANALYSIS_BASE, branch, 'bots', formatted_author)
+                    #import pdb ; pdb.set_trace()
+                    os.makedirs(user_dir, exist_ok=True)
+                else:
+                    #import pdb ; pdb.set_trace()
+                    formatted_author = author.replace(' ','_').lower()
+                    safe = ''.join(c if c.isalnum() or c in '._-' else '_' for c in formatted_author)
+                    user_dir = os.path.join(users_base_branch, safe)
+                    #import pdb ; pdb.set_trace()
+                    os.makedirs(user_dir, exist_ok=True)
+                out_path = os.path.join(user_dir, 'user_commits.json')
+                try:
+                    with open(out_path, 'w') as fh:
+                        json.dump({'user': formatted_author, 'commits': commits}, fh, indent=2)
+                except Exception as e:
+                    print(f"Failed to write per-branch user commits for {author}: {e}")
+        except Exception as e:
+            print(f"Failed to build per-user commits for branch {branch}: {e}")
+        if os.path.exists(branch_repo_path):
             shutil.rmtree(branch_repo_path)
-
-    print("\nAnalysis complete.")
-
+       
+        
 if __name__ == "__main__":
     main()
 

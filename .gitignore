@@ -1,9 +1,11 @@
 # Byte-compiled / optimized / DLL files
-**/__pycache__/
+**/__pycache__/**
 **logs*/
 *.py[cod]
 *$py.class
-
+**/hello_worlds/**
+**/repo_analysis/**
+**/logs_*/**
 # C extensions
 *.so
 

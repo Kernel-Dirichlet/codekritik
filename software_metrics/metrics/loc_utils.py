@@ -15,7 +15,7 @@ def fetch_lines(lines,
     single_line_comment = comment_data[language]['comments'][0]
     multi_line_comment_start = comment_data[language]['comments'][1] if len(comment_data[language]['comments']) > 1 else None
     multi_line_comment_end = comment_data[language]['comments'][2] if len(comment_data[language]['comments']) > 2 else None
-
+    
     total_lines = 0
     comment_lines = 0
     source_lines = 0
@@ -85,7 +85,7 @@ def count_lines_of_code(directory,
                     with open(file_path,'r') as code_file:
                         code_lines = code_file.readlines()
                 except:
-                    print('error reading file, likely a binary, skipping...')
+                    print(f'error reading file {file_path}, skipping...')
                     continue
                 if language == 'Assembly':
                     #no comments allowed in assembly files
