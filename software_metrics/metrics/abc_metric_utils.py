@@ -72,6 +72,7 @@ def abc_process_directory(directory,
             try:
                 with open(file_path,'r') as code_file:
                     code_lines = code_file.readlines()
+                    # import pdb ; pdb.set_trace()
                     if language == 'Assembly':
                         comments_json = asm_tokens
                     if language in ['LLVM','IR_GROUP']:
@@ -82,9 +83,8 @@ def abc_process_directory(directory,
                                                     language = language,
                                                     comments_json = comments_json,
                                                     mode = 'source')
-                    #import pdb ; pdb.set_trace()
             except:
-                print('error reading file, likely a binary, skipping...')
+                print(f'error reading file {file_path}, skipping...')
                 continue
             if language == 'Assembly':
                 abc_dict = get_abcs(json_file = asm_tokens,
@@ -112,8 +112,8 @@ def abc_process_directory(directory,
 
 
 def abc_full_analysis(abc_dict,
-                      extensions_map):
-
+                      extensions_map,
+                      output_dir='repo_analysis'):
     lang_dict = {}
     files = list(abc_dict.keys())
     for i,file in enumerate(files):
@@ -142,6 +142,15 @@ def abc_full_analysis(abc_dict,
                      'language_dict': lang_dict,
                      'file_dict': abc_dict}
 
+    # Ensure output directory exists
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    # Write results to repo_analysis/abc_full_analysis.json
+    output_path = os.path.join(output_dir, 'abc_full_analysis.json')
+    with open(output_path, 'w') as f:
+        json.dump(abc_full_dict, f, indent=2)
+
     return abc_full_dict
 
 
@@ -151,5 +160,5 @@ def estimate_ipl(assignments,branches,conditionals):
     upper_bnd = lower_bnd + conditionals
     bounds = {'upper': upper_bnd,
               'lower': lower_bnd}
-    return bounds 
+    return bounds
 
