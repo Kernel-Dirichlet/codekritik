@@ -9,9 +9,12 @@ from repo_utils.git_code_utils import (
     fetch_git_history_between_dates,
     clone_repository,
     get_all_branches,
+
 )
 
-from repo_utils.git_utils import get_active_users, create_user_commit_jsons
+from repo_utils.git_utils import (
+    get_active_users, 
+    create_user_commit_jsons, fetch_git_stats, fetch_git_history)
 
 def main():
     # Argparse setup
@@ -79,7 +82,8 @@ def main():
                 out_path = os.path.join(user_dir, 'user_commits.json')
                 try:
                     with open(out_path, 'w') as fh:
-                        json.dump({'user': author, 'commits': commits}, fh, indent=2)
+                        # write the commits mapping (commit_hash -> {date: metrics})
+                        json.dump(commits, fh, indent=2)
                 except Exception as e:
                     print(f"Failed to write user commits for {author}: {e}")
         except Exception as e:
@@ -130,6 +134,12 @@ def main():
         git_history, _ = fetch_git_history_between_dates(
             start_date, end_date, branch, repo_url=None, local_path=branch_repo_path
         )
+
+        # Compute global repo metrics for this branch and write to a file
+        # Note: the detailed git-level stats are computed later in the
+        # combined section below; avoid writing the raw `fetch_git_stats`
+        # output here to keep the on-disk `global_metrics.json` compact and
+        # consistent with the aggregated summary.
 
         # Process each commit in the branch
         for line in git_history:
@@ -195,8 +205,9 @@ def main():
         users = get_active_users(branch_repo_path, start_date, end_date, branch)
         formatted_users = [user.replace(' ','_').lower() for user in users]
         
-        human_users = [user for user in formatted_users if "[bot]" not in user]
-        bots = [user for user in formatted_users if "[bot]" in user]
+        # treat any username containing 'bot' (case-insensitive) as a bot
+        human_users = [user for user in formatted_users if 'bot' not in user]
+        bots = [user for user in formatted_users if 'bot' in user]
         formatted_bots = [bot.split('[')[0].strip() for bot in bots]
         for user in human_users:
             if not os.path.exists(os.path.join(REPO_ANALYSIS_BASE, branch, 'users')):
@@ -213,34 +224,36 @@ def main():
             per_user_commits = create_user_commit_jsons(local_path = branch_repo_path,
                                                         branch = branch, 
                                                         since = args.since, until=args.until)
-            #import pdb ; pdb.set_trace()
             users_base_branch = os.path.join(REPO_ANALYSIS_BASE,
              branch,
              'users')
             os.makedirs(users_base_branch, exist_ok=True)
             for author, commits in per_user_commits.items():
-                if '[bot]' in author:
-                    formatted_author = author.split('[')[0].strip()
-                    user_dir = os.path.join(REPO_ANALYSIS_BASE, branch, 'bots', formatted_author)
-                    #import pdb ; pdb.set_trace()
-                    os.makedirs(user_dir, exist_ok=True)
+                # decide whether this author is a bot (use case-insensitive check)
+                is_bot_author = 'bot' in author.lower()
+                # normalize and sanitize a directory-safe name
+                formatted_author = author.split('[')[0].strip() if '[' in author else author
+                formatted_author = formatted_author.replace(' ', '_').lower()
+                safe = ''.join(c if c.isalnum() or c in '._-' else '_' for c in formatted_author)
+
+                if is_bot_author:
+                    user_dir = os.path.join(REPO_ANALYSIS_BASE, branch, 'bots', safe)
                 else:
-                    #import pdb ; pdb.set_trace()
-                    formatted_author = author.replace(' ','_').lower()
-                    safe = ''.join(c if c.isalnum() or c in '._-' else '_' for c in formatted_author)
                     user_dir = os.path.join(users_base_branch, safe)
-                    #import pdb ; pdb.set_trace()
-                    os.makedirs(user_dir, exist_ok=True)
+
+                os.makedirs(user_dir, exist_ok=True)
                 out_path = os.path.join(user_dir, 'user_commits.json')
                 try:
                     with open(out_path, 'w') as fh:
-                        json.dump({'user': formatted_author, 'commits': commits}, fh, indent=2)
+                        # write the commits mapping (commit_hash -> {date: metrics})
+                        json.dump(commits, fh, indent=2)
                 except Exception as e:
                     print(f"Failed to write per-branch user commits for {author}: {e}")
         except Exception as e:
             print(f"Failed to build per-user commits for branch {branch}: {e}")
-        if os.path.exists(branch_repo_path):
-            shutil.rmtree(branch_repo_path)
+        print('fetching global stats...')
+        
+      
        
         
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ from datetime import datetime, timedelta
 import numpy as np
 import json
 import re
+from collections import Counter
 
 
 def fetch_git_history(repo_url = None,
@@ -402,22 +403,40 @@ def fetch_git_stats(git_history_results):
                 current_commit['files_changed'] += 1
                 file_change_count[filename] += 1
 
-    # Initialize user commit stats
-    user_commit_stats = defaultdict(lambda: {'lines_added': 0, 'lines_removed': 0, 'commit_size': []})
-    
+    # Initialize user commit stats using an online accumulator to avoid storing per-commit lists
+    # We'll keep counts, sum, and sumsq to compute mean/std without storing all values
+    user_commit_stats = defaultdict(lambda: {'lines_added': 0, 'lines_removed': 0, 'commit_count': 0, 'commit_size_sum': 0.0, 'commit_size_sumsq': 0.0})
+
     # Loop over commits to collect author-specific stats
     for commit in commit_stats:
         author = commit['author']
         commit_size = commit['lines_added'] + commit['lines_removed']
         user_commit_stats[author]['lines_added'] += commit['lines_added']
         user_commit_stats[author]['lines_removed'] += commit['lines_removed']
-        user_commit_stats[author]['commit_size'].append(commit_size)
-    
-    # Calculate stats per user
-    for author, stats in user_commit_stats.items():
-        commit_sizes = stats['commit_size']
-        user_commit_stats[author]['average_commit_size'] = round(np.mean(commit_sizes).item(),2) if commit_sizes else 0
-        user_commit_stats[author]['std_commit_size'] = round(np.std(commit_sizes).item(),2) if commit_sizes else 0
+        user_commit_stats[author]['commit_count'] += 1
+        user_commit_stats[author]['commit_size_sum'] += commit_size
+        user_commit_stats[author]['commit_size_sumsq'] += (commit_size * commit_size)
+
+    # Calculate stats per user and reduce payload (no per-commit arrays)
+    for author, stats in list(user_commit_stats.items()):
+        n = stats.get('commit_count', 0)
+        if n > 0:
+            mean = stats['commit_size_sum'] / n
+            # population std (use sample or population? keep population for simplicity)
+            variance = (stats['commit_size_sumsq'] / n) - (mean * mean)
+            std = float(np.sqrt(variance)) if variance > 0 else 0.0
+        else:
+            mean = 0.0
+            std = 0.0
+
+        # Replace accumulator fields with compact stats
+        user_commit_stats[author] = {
+            'lines_added': int(stats.get('lines_added', 0)),
+            'lines_removed': int(stats.get('lines_removed', 0)),
+            'commits': int(n),
+            'average_commit_size': round(float(mean), 2),
+            'std_commit_size': round(float(std), 2)
+        }
     
     # Calculate global stats
     total_lines_added = sum(commit['lines_added'] for commit in commit_stats)
@@ -428,11 +447,9 @@ def fetch_git_stats(git_history_results):
         'lines_added': total_lines_added,
         'lines_removed': total_lines_removed
     }
-    
 
     # Prepare and return the final statistics
     commit_data = {
-        'commits': commit_stats,
         'authors': list(authors),
         'lines_by_user': dict(lines_by_user),
         'user_commit_stats': dict(user_commit_stats),
@@ -446,7 +463,7 @@ def fetch_git_stats(git_history_results):
         'merge_commits': merge_commits,
         'bug_fix_commits': bug_fix_commits,
         'feat_commits': feat_commits,
-        'ci'
+        'ci_commits': ci_commits,
         'chore_commits': chore_commits
     }
 
