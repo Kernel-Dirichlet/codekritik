@@ -251,7 +251,7 @@ def main():
                     print(f"Failed to write per-branch user commits for {author}: {e}")
         except Exception as e:
             print(f"Failed to build per-user commits for branch {branch}: {e}")
-        print('fetching global stats...')
+        shutil.rmtree('./tmp/')
         
       
        
