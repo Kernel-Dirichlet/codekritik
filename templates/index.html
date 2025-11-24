@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CodeKritik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        h1 {
+            font-size: 60px;
+            color: #2c3e50; /* adjustable */
+            font-family: 'Helvetica', sans-serif; /* adjustable */
+        }
+        .form-box {
+            margin: 20px;
+        }
+        input {
+            padding: 10px;
+            width: 300px;
+            font-size: 16px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>CodeKritik</h1>
+    <form method="POST">
+        <div class="form-box">
+            <label>Repo URL:</label><br>
+            <input type="text" name="repo_url" required>
+        </div>
+        <div class="form-box">
+            <label>Start Date (MM-DD-YYYY):</label><br>
+            <input type="text" name="start_date" required>
+        </div>
+        <div class="form-box">
+            <label>End Date (MM-DD-YYYY):</label><br>
+            <input type="text" name="end_date" required>
+        </div>
+        <button type="submit">Analyze</button>
+    </form>
+</body>
+</html>

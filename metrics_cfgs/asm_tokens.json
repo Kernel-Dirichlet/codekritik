@@ -2,16 +2,42 @@
     "x86": {
         "assignments": [
             "mov",
-            "movzx",
-            "movsx",
             "lea",
             "push",
-            "pop"
+            "pop",
+            "add",
+            "sub",
+            "xchg",
+            "mul",
+            "imul",
+            "div",
+            "idiv",
+            "xor",
+            "and",
+            "or",
+            "shl",
+            "sal",
+            "shr",
+            "sar",
+            "movzx",
+            "movsx",
+            "inc",
+            "dec",
+            "neg",
+            "not"
         ],
         "branches": [
             "jmp",
+            "call",
+            "ret",
+            "jo",
+            "jno",
+            "js",
+            "jns",
             "je",
             "jne",
+            "jz",
+            "jnz",
             "jg",
             "jge",
             "jl",
@@ -20,99 +46,174 @@
             "jae",
             "jb",
             "jbe",
-            "call",
-            "ret"
+            "jc",
+            "jnc",
+            "jp",
+            "jnp"
         ],
         "conditionals": [
             "cmp",
-            "test"
+            "test",
+            "cmove",
+            "cmovne",
+            "cmovg",
+            "cmovge",
+            "cmovl",
+            "cmovle",
+            "cmova",
+            "cmovae",
+            "cmovb",
+            "cmovbe",
+            "sete",
+            "setne",
+            "setg",
+            "setge",
+            "setl",
+            "setle",
+            "seta",
+            "setae",
+            "setb",
+            "setbe",
+            "seto",
+            "setno",
+            "sets",
+            "setns",
+            "setp",
+            "setnp"
         ],
         "loops": [
             "loop",
-            "loopz",
-            "loope",
-            "loopnz",
-            "loopne"
+            "jcxz",
+            "jcxnz",
+            "jecxz",
+            "jecxnz"
         ],
         "comments": [
-            ";"
+            ";",
+            "#"
         ]
     },
     "ARM": {
         "assignments": [
-            "mov",
-            "ldr",
-            "str",
-            "push",
-            "pop"
+            "MOV",
+            "MVN",
+            "ADD",
+            "ADC",
+            "SUB",
+            "SBC",
+            "MUL",
+            "MLA",
+            "SDIV",
+            "UDIV",
+            "AND",
+            "ORR",
+            "EOR",
+            "LSL",
+            "LSR",
+            "ASR",
+            "ROR",
+            "RRX"
         ],
         "branches": [
-            "b",
-            "bl",
-            "bx",
-            "beq",
-            "bne",
-            "bgt",
-            "bge",
-            "blt",
-            "ble",
-            "bhi",
-            "bls"
+            "B",
+            "BL",
+            "BX",
+            "BEQ",
+            "BNE",
+            "BGT",
+            "BGE",
+            "BLT",
+            "BLE",
+            "BHI",
+            "BHS",
+            "BCS",
+            "BLO",
+            "BCC",
+            "BMI",
+            "BPL"
         ],
         "conditionals": [
-            "cmp",
-            "tst"
+            "CMP",
+            "TST",
+            "CMN",
+            "TEQ"
         ],
-        "loops": [
-            "b",
-            "bl",
-            "bx"
-        ],
+        "loops": [],
         "comments": [
-            ";"
+            ";",
+            "@"
         ]
     },
     "RISC-V": {
         "assignments": [
-            "li",
-            "mv",
-            "la",
-            "lw",
-            "sw"
+            "ADD",
+            "SUB",
+            "MUL",
+            "MULH",
+            "MULHU",
+            "MULHSU",
+            "DIV",
+            "DIVU",
+            "REM",
+            "REMU",
+            "AND",
+            "OR",
+            "XOR",
+            "SLL",
+            "SRL",
+            "SRA",
+            "LUI",
+            "AUIPC",
+            "LW",
+            "SW"
         ],
         "branches": [
-            "j",
-            "jal",
-            "jalr",
-            "beq",
-            "bne",
-            "bge",
-            "blt",
-            "bltu",
-            "bgeu"
+            "JAL",
+            "JALR",
+            "BEQ",
+            "BNE",
+            "BLT",
+            "BGE",
+            "BLTU",
+            "BGEU"
         ],
         "conditionals": [
-            "slti",
-            "sltiu",
-            "slt",
-            "slu",
-            "sltu"
+            "SLT",
+            "SLTU",
+            "SLTI",
+            "SLTIU"
         ],
-        "loops": [
-            "j",
-            "jal"
-        ],
+        "loops": [],
         "comments": [
-            ";"
+            "#",
+            "//",
+            "/*",
+            "*/"
         ]
     },
     "MIPS": {
         "assignments": [
-            "li",
-            "move",
-            "la",
-            "lw",
-            "sw"
+            "add",
+            "addu",
+            "sub",
+            "subu",
+            "mult",
+            "multu",
+            "div",
+            "divu",
+            "and",
+            "andi",
+            "or",
+            "ori",
+            "xor",
+            "xori",
+            "nor",
+            "sll",
+            "sllv",
+            "srl",
+            "srlv",
+            "sra",
+            "srav"
         ],
         "branches": [
             "j",
@@ -121,57 +222,65 @@
             "beq",
             "bne",
             "bgtz",
-            "blez",
+            "bgez",
             "bltz",
-            "bgez"
+            "blez"
         ],
         "conditionals": [
             "slt",
-            "slti",
             "sltu",
+            "slti",
             "sltiu"
         ],
-        "loops": [
-            "j",
-            "jal"
-        ],
+        "loops": [],
         "comments": [
             "#"
         ]
     },
     "PowerPC": {
         "assignments": [
-            "li",
-            "mr",
-            "la",
             "lwz",
             "stw",
-            "stwu",
             "addi",
-            "addis"
+            "add",
+            "subf",
+            "mullw",
+            "mulhw",
+            "divw",
+            "divwu",
+            "and",
+            "andi",
+            "or",
+            "ori",
+            "xor",
+            "xori",
+            "nor",
+            "slw",
+            "srw",
+            "sraw"
         ],
         "branches": [
             "b",
+            "beq",
+            "bne",
+            "bgt",
+            "bge",
+            "blt",
+            "ble",
             "bl",
             "blr",
-            "bc",
-            "bclr",
-            "bne",
-            "beq",
-            "bge",
-            "blt"
+            "bc"
         ],
         "conditionals": [
             "cmp",
-            "cmpi",
             "cmpl",
-            "cmpli"
+            "cntlzw"
         ],
         "loops": [
-            "b",
-            "bl"
+            "loop"
         ],
         "comments": [
+            ";",
             "#"
         ]
     },
@@ -180,69 +289,107 @@
             "mov",
             "set",
             "ld",
+            "lduw",
+            "ldub",
+            "lduh",
             "st",
+            "stw",
+            "stb",
+            "sth",
             "add",
+            "addcc",
             "sub",
+            "subcc",
+            "mulx",
+            "sdivx",
+            "udivx",
             "and",
+            "andcc",
             "or",
-            "xor"
+            "orcc",
+            "xor",
+            "xorcc",
+            "sll",
+            "srl",
+            "sra"
         ],
         "branches": [
             "ba",
-            "b",
-            "bl",
+            "bn",
             "be",
             "bne",
             "bg",
-            "ble",
             "bge",
-            "blt"
+            "bl",
+            "ble",
+            "bgu",
+            "bgeu",
+            "blu",
+            "bleu",
+            "call",
+            "ret",
+            "retl",
+            "jmp"
         ],
         "conditionals": [
             "cmp",
-            "tst"
+            "tst",
+            "scc",
+            "movcc"
         ],
-        "loops": [
-            "ba",
-            "b",
-            "bl"
-        ],
+        "loops": [],
         "comments": [
-            "!"
+            "!",
+            "/*",
+            "*/"
         ]
     },
     "Z80": {
         "assignments": [
-            "ld",
-            "ldd",
-            "ldi",
-            "ldir",
-            "lddr",
-            "push",
-            "pop"
+            "LD",
+            "ADD",
+            "ADC",
+            "SUB",
+            "SBC",
+            "INC",
+            "DEC",
+            "AND",
+            "OR",
+            "XOR",
+            "CP",
+            "NEG",
+            "RLCA",
+            "RLA",
+            "RRCA",
+            "RRA",
+            "RLC",
+            "RL",
+            "RRC",
+            "RR",
+            "SLA",
+            "SRA",
+            "SRL",
+            "SLL"
         ],
         "branches": [
-            "jp",
-            "jr",
-            "call",
-            "ret",
-            "retn",
-            "reti"
+            "JP",
+            "JR",
+            "CALL",
+            "RET",
+            "RST"
         ],
         "conditionals": [
-            "cp",
-            "and",
-            "or",
-            "xor",
-            "sub",
-            "dec",
-            "inc"
+            "JP cc",
+            "JR cc",
+            "CALL cc",
+            "RET cc",
+            "CP",
+            "BIT",
+            "SET",
+            "RES"
         ],
         "loops": [
-            "djnz",
-            "jp",
-            "jr",
-            "call"
+            "DJNZ"
         ],
         "comments": [
             ";"

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>CodeKritik Results</title>
+    <style>
+        ul { list-style-type: none; margin-left: 20px; }
+        li { margin: 4px 0; }
+        .folder { font-weight: bold; cursor: pointer; }
+        .nested { display: none; }
+        .active { display: block; }
+    </style>
+</head>
+<body>
+    <h2>Repo Analysis Files</h2>
+    <ul>
+        {% macro render_node(node, relpath="") %}
+            <li>
+                <span class="folder" onclick="toggle(this)">{{ node.name }}/</span>
+                <ul class="nested">
+                    {% for d in node.dirs %}
+                        {{ render_node(d, relpath + '/' + d.name) }}
+                    {% endfor %}
+                    {% for f in node.files %}
+                        <li>
+                            <a href="{{ url_for('view_file', filename=(relpath + '/' + f).lstrip('/')) }}">{{ f }}</a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </li>
+        {% endmacro %}
+        {{ render_node(tree, "") }}
+    </ul>
+
+    <script>
+        function toggle(el) {
+            el.nextElementSibling.classList.toggle("active");
+        }
+    </script>
+</body>
+</html>

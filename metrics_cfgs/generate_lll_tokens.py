@@ -1,53 +1,90 @@
 import json
 
 # x86 Assembly
-X86_ASSIGNMENTS = ["mov", "movzx", "movsx", "lea", "push", "pop"]
-X86_BRANCHES = ["jmp", "je", "jne", "jg", "jge", "jl", "jle", "ja", "jae", "jb", "jbe", "call", "ret"]
-X86_CONDITIONALS = ["cmp", "test"]
-X86_LOOPS = ["loop", "loopz", "loope", "loopnz", "loopne"]
-X86_COMMENTS = [';']
+X86_ASSIGNMENTS = ['mov','lea','push','pop','add','sub','xchg','mul',
+                    'imul','div','idiv','xor','and','or','shl','sal',
+                    'shr','sar','movzx','movsx','inc','dec','neg','not']
+
+X86_BRANCHES = ['jmp','call','ret','jo','jno','js','jns','je','jne','jz',
+                    'jnz','jg','jge','jl','jle','ja','jae','jb','jbe','jc',
+                    'jnc','jp','jnp']
+
+X86_CONDITIONALS = ['cmp','test','cmove','cmovne','cmovg','cmovge','cmovl',
+                       'cmovle','cmova','cmovae','cmovb','cmovbe','sete','setne',
+                       'setg','setge','setl','setle','seta','setae','setb','setbe',
+                       'seto','setno','sets','setns','setp','setnp']
+
+X86_LOOPS = ['loop', 'jcxz', 'jcxnz','jecxz','jecxnz']
+X86_COMMENTS = [';','#']
+
 
 # ARM Assembly
-ARM_ASSIGNMENTS = ["mov", "ldr", "str", "push", "pop"]
-ARM_BRANCHES = ["b", "bl", "bx", "beq", "bne", "bgt", "bge", "blt", "ble", "bhi", "bls"]
-ARM_CONDITIONALS = ["cmp", "tst"]
-ARM_LOOPS = ["b", "bl", "bx"]  # ARM uses branch instructions for loops
-ARM_COMMENTS = [';']
+ARM_ASSIGNMENTS = ['MOV','MVN','ADD','ADC','SUB','SBC','MUL',
+                       'MLA','SDIV','UDIV','AND','ORR','EOR','LSL',
+                       'LSR','ASR','ROR','RRX']
+
+ARM_BRANCHES = ['B','BL','BX','BEQ','BNE','BGT','BGE',
+                    'BLT','BLE','BHI','BHS','BCS','BLO',
+                     'BCC','BMI','BPL']
+
+ARM_CONDITIONALS = ['CMP', 'TST','CMN', 'TEQ']
+ARM_LOOPS = []
+ARM_COMMENTS = [';','@']
+
 
 # RISC-V Assembly
-RISCV_ASSIGNMENTS = ["li", "mv", "la", "lw", "sw"]
-RISCV_BRANCHES = ["j", "jal", "jalr", "beq", "bne", "bge", "blt", "bltu", "bgeu"]
-RISCV_CONDITIONALS = ["slti", "sltiu", "slt", "slu", "sltu"]
-RISCV_LOOPS = ["j", "jal"]  # RISC-V uses jump instructions for loops
-RISCV_COMMENTS = [';']
+RISCV_ASSIGNMENTS = ['ADD','SUB','MUL','MULH','MULHU','MULHSU','DIV','DIVU','REM',
+                         'REMU','AND','OR','XOR','SLL','SRL','SRA','LUI','AUIPC','LW',
+                          'SW']
+
+RISCV_BRANCHES = ['JAL', 'JALR', 'BEQ', 'BNE', 'BLT', 'BGE', 'BLTU', 'BGEU']
+RISCV_CONDITIONALS = ['SLT', 'SLTU','SLTI','SLTIU']
+RISCV_LOOPS = []
+RISCV_COMMENTS = ['#', '//', '/*', '*/']
+
 
 # MIPS Assembly
-MIPS_ASSIGNMENTS = ["li", "move", "la", "lw", "sw"]
-MIPS_BRANCHES = ["j", "jal", "jr", "beq", "bne", "bgtz", "blez", "bltz", "bgez"]
-MIPS_CONDITIONALS = ["slt", "slti", "sltu", "sltiu"]
-MIPS_LOOPS = ["j", "jal"]  # MIPS uses jump instructions for loops
+MIPS_ASSIGNMENTS = ['add','addu','sub','subu','mult','multu','div','divu','and','andi',
+                    'or','ori','xor','xori','nor','sll','sllv','srl','srlv','sra','srav']
+
+MIPS_BRANCHES = ['j','jal','jr','beq','bne','bgtz','bgez','bltz','blez']
+MIPS_CONDITIONALS = ['slt', 'sltu','slti','sltiu']
+MIPS_LOOPS = []
 MIPS_COMMENTS = ['#']
 
 # PowerPC Assembly
-POWERPC_ASSIGNMENTS = ["li", "mr", "la", "lwz", "stw", "stwu", "addi", "addis"]
-POWERPC_BRANCHES = ["b", "bl", "blr", "bc", "bclr", "bne", "beq", "bge", "blt"]
-POWERPC_CONDITIONALS = ["cmp", "cmpi", "cmpl", "cmpli"]
-POWERPC_LOOPS = ["b", "bl"]  # PowerPC uses branch instructions for loops
-POWERPC_COMMENTS = ['#']
+POWERPC_ASSIGNMENTS = ['lwz','stw','addi','add','subf','mullw','mulhw','divw','divwu',
+                           'and','andi','or','ori','xor','xori','nor','slw','srw','sraw']
+
+POWERPC_BRANCHES = ['b', 'beq', 'bne', 'bgt', 'bge', 'blt', 'ble', 'bl', 'blr','bc']
+POWERPC_CONDITIONALS = ['cmp','cmpl','cntlzw']
+POWERPC_LOOPS = ['loop']
+POWERPC_COMMENTS = [';','#']    
+
 
 # SPARC Assembly
-SPARC_ASSIGNMENTS = ["mov", "set", "ld", "st", "add", "sub", "and", "or", "xor"]
-SPARC_BRANCHES = ["ba", "b", "bl", "be", "bne", "bg", "ble", "bge", "blt"]
-SPARC_CONDITIONALS = ["cmp", "tst"]
-SPARC_LOOPS = ["ba", "b", "bl"]  # SPARC uses branch instructions for loops
-SPARC_COMMENTS = ['!']
+SPARC_ASSIGNMENTS = ['mov','set','ld','lduw','ldub','lduh','st','stw','stb',
+                      'sth','add','addcc','sub','subcc','mulx','sdivx',
+                    'udivx','and','andcc','or','orcc','xor','xorcc','sll',
+                    'srl','sra']
+
+SPARC_BRANCHES = ['ba','bn','be','bne','bg','bge','bl','ble',
+                  'bgu','bgeu','blu','bleu','call','ret','retl','jmp']
+
+SPARC_CONDITIONALS = ['cmp','tst','scc','movcc']
+SPARC_LOOPS = []
+SPARC_COMMENTS = ['!','/*','*/']
 
 # Z80 Assembly
-Z80_ASSIGNMENTS = ["ld", "ldd", "ldi", "ldir", "lddr", "push", "pop"]
-Z80_BRANCHES = ["jp", "jr", "call", "ret", "retn", "reti"]
-Z80_CONDITIONALS = ["cp", "and", "or", "xor", "sub", "dec", "inc"]
-Z80_LOOPS = ["djnz", "jp", "jr", "call"]  # Z80 uses conditional jumps for loops
+Z80_ASSIGNMENTS = ['LD','ADD','ADC','SUB','SBC','INC','DEC','AND','OR','XOR',
+                  'CP','NEG','RLCA','RLA','RRCA','RRA','RLC','RL','RRC','RR',
+                  'SLA','SRA','SRL','SLL']
+
+Z80_BRANCHES = ['JP','JR','CALL','RET','RST']
+Z80_CONDITIONALS = ['JP cc', 'JR cc', 'CALL cc','RET cc','CP','BIT','SET','RES'] 
+Z80_LOOPS = ['DJNZ'] 
 Z80_COMMENTS = [';']
+
 
 
 # Create assembly languages dictionary

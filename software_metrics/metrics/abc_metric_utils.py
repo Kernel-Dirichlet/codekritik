@@ -34,7 +34,8 @@ def get_abcs(json_file, language, lines):
     # Compile patterns for conditionals
     escaped_conditionals = [re.escape(op) for op in conditionals]
     conditional_pattern = re.compile(r'(\b' + r'|'.join(escaped_conditionals) + r'\b)')
-
+    
+    
     # Search through lines for matching patterns and count them
     assignment_count = 0
     branch_count = 0
@@ -72,7 +73,6 @@ def abc_process_directory(directory,
             try:
                 with open(file_path,'r') as code_file:
                     code_lines = code_file.readlines()
-                    # import pdb ; pdb.set_trace()
                     if language == 'Assembly':
                         comments_json = asm_tokens
                     if language in ['LLVM','IR_GROUP']:
@@ -83,6 +83,7 @@ def abc_process_directory(directory,
                                                     language = language,
                                                     comments_json = comments_json,
                                                     mode = 'source')
+
             except:
                 print(f'error reading file {file_path}, skipping...')
                 continue
@@ -126,6 +127,7 @@ def abc_full_analysis(abc_dict,
                                'branches': 0,
                                'conditionals': 0,
                                'abc_score': 0}
+
         if lang in lang_dict.keys():
             for key in abc_dict[file].keys():
                 lang_dict[lang][key] += abc_dict[file][key]
@@ -141,11 +143,11 @@ def abc_full_analysis(abc_dict,
     abc_full_dict = {'global_dict': global_dict,
                      'language_dict': lang_dict,
                      'file_dict': abc_dict}
-
+    
     # Ensure output directory exists
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
-
+    
     # Write results to repo_analysis/abc_full_analysis.json
     output_path = os.path.join(output_dir, 'abc_full_analysis.json')
     with open(output_path, 'w') as f:

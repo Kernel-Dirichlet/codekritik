@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>View File - CodeKritik</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f9f9f9;
+        }
+        h2 {
+            text-align: center;
+            color: #2c3e50;
+        }
+        .file-box {
+            background-color: #fff;
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px auto;
+            width: 80%;
+            max-height: 600px;
+            overflow-y: auto;
+            white-space: pre-wrap; /* preserve formatting */
+            font-family: monospace;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            text-decoration: none;
+            color: #2980b9;
+        }
+    </style>
+</head>
+<body>
+    <h2>Viewing: {{ filename }}</h2>
+    <div class="file-box">
+        {{ content }}
+    </div>
+    <a href="{{ url_for('browse') }}">Back to file list</a>
+</body>
+</html>
