@@ -1,43 +1,396 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>View File - CodeKritik</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeKritik — {{ filename }}</title>
     <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #21262d;
+            --border: #30363d;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --success: #3fb950;
+            --warning: #d29922;
+            --danger: #f85149;
+            --purple: #bc8cff;
+            --orange: #ffa657;
+            --radius: 10px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: Arial, sans-serif;
-            margin: 40px;
-            background-color: #f9f9f9;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
-        h2 {
-            text-align: center;
-            color: #2c3e50;
+
+        /* ── Header ── */
+        header {
+            width: 100%;
+            padding: 18px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
         }
-        .file-box {
-            background-color: #fff;
-            border: 1px solid #ccc;
-            padding: 20px;
-            margin: 20px auto;
-            width: 80%;
-            max-height: 600px;
-            overflow-y: auto;
-            white-space: pre-wrap; /* preserve formatting */
-            font-family: monospace;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+
+        header .logo-icon { font-size: 24px; }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
         }
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 20px;
+
+        header nav {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        header nav a {
+            font-size: 13px;
+            color: var(--text-muted);
             text-decoration: none;
-            color: #2980b9;
+            transition: color 0.2s;
         }
+
+        header nav a:hover { color: var(--accent); }
+
+        /* ── Main ── */
+        .container {
+            max-width: 1100px;
+            width: 100%;
+            margin: 32px auto;
+            padding: 0 24px;
+            flex: 1;
+        }
+
+        /* ── Breadcrumb ── */
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .breadcrumb a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .breadcrumb a:hover { text-decoration: underline; }
+        .breadcrumb .sep { color: var(--border); }
+
+        /* ── File header ── */
+        .file-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .file-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .file-title .file-icon { font-size: 22px; }
+
+        .file-title h2 {
+            font-size: 18px;
+            font-weight: 700;
+            word-break: break-all;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            border: 1px solid var(--border);
+            background: var(--surface2);
+            color: var(--text-muted);
+            transition: background 0.2s, color 0.2s;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn:hover {
+            background: var(--surface);
+            color: var(--text);
+        }
+
+        /* ── Metric cards (JSON view) ── */
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 14px;
+            margin-bottom: 24px;
+        }
+
+        .metric-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 16px 18px;
+        }
+
+        .metric-card .metric-label {
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+        }
+
+        .metric-card .metric-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--accent);
+            font-variant-numeric: tabular-nums;
+        }
+
+        .metric-card .metric-value.good { color: var(--success); }
+        .metric-card .metric-value.warn { color: var(--warning); }
+        .metric-card .metric-value.bad  { color: var(--danger); }
+
+        /* ── Code / JSON box ── */
+        .code-box {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            overflow: hidden;
+        }
+
+        .code-box-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--surface2);
+        }
+
+        .code-box-header span {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+        }
+
+        .copy-btn {
+            font-size: 12px;
+            padding: 4px 10px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            background: transparent;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: color 0.2s, border-color 0.2s;
+        }
+
+        .copy-btn:hover { color: var(--accent); border-color: var(--accent); }
+
+        pre {
+            padding: 20px;
+            overflow-x: auto;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 13px;
+            line-height: 1.6;
+            max-height: 70vh;
+            overflow-y: auto;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* ── JSON syntax highlighting ── */
+        .json-key    { color: var(--accent); }
+        .json-string { color: var(--success); }
+        .json-number { color: var(--orange); }
+        .json-bool   { color: var(--purple); }
+        .json-null   { color: var(--text-muted); }
+
+        /* ── Footer ── */
+        footer {
+            padding: 16px 40px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        footer a { color: var(--accent); text-decoration: none; }
     </style>
 </head>
 <body>
-    <h2>Viewing: {{ filename }}</h2>
-    <div class="file-box">
-        {{ content }}
+
+<header>
+    <span class="logo-icon">🔬</span>
+    <h1>CodeKritik</h1>
+    <nav>
+        <a href="/">New Analysis</a>
+        <a href="/browse">Browse Results</a>
+    </nav>
+</header>
+
+<div class="container">
+
+    <!-- Breadcrumb -->
+    <div class="breadcrumb">
+        <a href="/browse">repo_analysis</a>
+        {% set parts = filename.split('/') %}
+        {% for part in parts %}
+            <span class="sep">/</span>
+            {% if loop.last %}
+                <span>{{ part }}</span>
+            {% else %}
+                <span>{{ part }}</span>
+            {% endif %}
+        {% endfor %}
     </div>
-    <a href="{{ url_for('browse') }}">Back to file list</a>
+
+    <!-- File header -->
+    <div class="file-header">
+        <div class="file-title">
+            <span class="file-icon">
+                {% if filename.endswith('.json') %}📊
+                {% elif filename.endswith('.txt') %}📄
+                {% else %}📋{% endif %}
+            </span>
+            <h2>{{ filename.split('/')[-1] }}</h2>
+        </div>
+        <div class="file-actions">
+            <button class="btn" onclick="copyContent()">📋 Copy</button>
+            <a class="btn" href="/browse">← Browse</a>
+        </div>
+    </div>
+
+    <!-- Metric summary cards (only for JSON files) -->
+    {% if filename.endswith('.json') %}
+    <div id="metricCards" class="metric-grid"></div>
+    {% endif %}
+
+    <!-- Code box -->
+    <div class="code-box">
+        <div class="code-box-header">
+            <span>{{ filename }}</span>
+            <button class="copy-btn" onclick="copyContent()">Copy raw</button>
+        </div>
+        <pre id="codeContent">{{ content }}</pre>
+    </div>
+
+</div>
+
+<footer>
+    <a href="/browse">← Back to file list</a>
+</footer>
+
+<script>
+    const rawContent = document.getElementById('codeContent').textContent;
+
+    // ── JSON pretty-print + syntax highlight ──
+    function syntaxHighlight(json) {
+        json = json.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+        return json.replace(
+            /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+            function(match) {
+                let cls = 'json-number';
+                if (/^"/.test(match)) {
+                    cls = /:$/.test(match) ? 'json-key' : 'json-string';
+                } else if (/true|false/.test(match)) {
+                    cls = 'json-bool';
+                } else if (/null/.test(match)) {
+                    cls = 'json-null';
+                }
+                return '<span class="' + cls + '">' + match + '</span>';
+            }
+        );
+    }
+
+    const pre = document.getElementById('codeContent');
+    const isJson = {{ 'true' if filename.endswith('.json') else 'false' }};
+
+    if (isJson) {
+        try {
+            const parsed = JSON.parse(rawContent);
+            const pretty = JSON.stringify(parsed, null, 2);
+            pre.innerHTML = syntaxHighlight(pretty);
+
+            // ── Build metric summary cards ──
+            const cards = document.getElementById('metricCards');
+            if (cards && parsed) {
+                const interesting = ['loc','sloc','cloc','bloc','volume','difficulty',
+                                     'effort','estimated_bugs','cyclomatic_complexity',
+                                     'abc_score','assignments','branches','conditionals',
+                                     'vocabulary_size','program_length'];
+
+                // Try global_dict first
+                const src = parsed.global_dict || parsed;
+                interesting.forEach(key => {
+                    if (src[key] !== undefined) {
+                        const card = document.createElement('div');
+                        card.className = 'metric-card';
+                        const val = typeof src[key] === 'number'
+                            ? (Number.isInteger(src[key]) ? src[key] : src[key].toFixed(2))
+                            : src[key];
+
+                        // Color coding
+                        let valClass = '';
+                        if (key === 'estimated_bugs') valClass = src[key] > 0 ? 'bad' : 'good';
+                        if (key === 'cyclomatic_complexity') {
+                            valClass = src[key] <= 10 ? 'good' : src[key] <= 20 ? 'warn' : 'bad';
+                        }
+
+                        card.innerHTML = `
+                            <div class="metric-label">${key.replace(/_/g,' ')}</div>
+                            <div class="metric-value ${valClass}">${val}</div>
+                        `;
+                        cards.appendChild(card);
+                    }
+                });
+            }
+        } catch(e) {
+            // Not valid JSON — show as plain text
+        }
+    }
+
+    // ── Copy to clipboard ──
+    function copyContent() {
+        navigator.clipboard.writeText(rawContent).then(() => {
+            const btns = document.querySelectorAll('.copy-btn, .btn[onclick="copyContent()"]');
+            btns.forEach(b => { b.textContent = '✓ Copied!'; });
+            setTimeout(() => {
+                document.querySelectorAll('.copy-btn').forEach(b => b.textContent = 'Copy raw');
+                document.querySelectorAll('.btn[onclick="copyContent()"]').forEach(b => b.textContent = '📋 Copy');
+            }, 2000);
+        });
+    }
+</script>
+
 </body>
 </html>

@@ -73,32 +73,37 @@ def abc_process_directory(directory,
             try:
                 with open(file_path,'r') as code_file:
                     code_lines = code_file.readlines()
-                    if language == 'Assembly':
-                        comments_json = asm_tokens
-                    if language in ['LLVM','IR_GROUP']:
-                        comments_json = ir_tokens
-                    else:
-                        comments_json = hll_tokens
-                    source_code_lines = fetch_lines(lines = code_lines,
-                                                    language = language,
-                                                    comments_json = comments_json,
-                                                    mode = 'source')
 
-            except:
-                print(f'error reading file {file_path}, skipping...')
+                if language == 'Assembly':
+                    lang_ = detect_assembly_language(' '.join(code_lines))
+                    comments_json = asm_tokens
+                elif language in ['LLVM', 'IR_GROUP']:
+                    lang_ = detect_ir_language(' '.join(code_lines))
+                    comments_json = ir_tokens
+                else:
+                    lang_ = language
+                    comments_json = hll_tokens
+
+                source_code_lines = fetch_lines(lines = code_lines,
+                                                language = lang_,
+                                                comments_json = comments_json,
+                                                mode = 'source')
+
+            except Exception as exc:
+                print(f'error reading file {file_path}: {exc}, skipping...')
                 continue
+
             if language == 'Assembly':
                 abc_dict = get_abcs(json_file = asm_tokens,
-                                    language = language,
+                                    language = lang_,
                                     lines = source_code_lines)
-                
-            if language in ['LLVM', 'IR_GROUP']:
+            elif language in ['LLVM', 'IR_GROUP']:
                 abc_dict = get_abcs(json_file = ir_tokens,
-                                    language = language,
+                                    language = lang_,
                                     lines = source_code_lines)
             else:
                 abc_dict = get_abcs(json_file = hll_tokens,
-                                    language = language,
+                                    language = lang_,
                                     lines = source_code_lines)
 
             a = abc_dict['assignments']

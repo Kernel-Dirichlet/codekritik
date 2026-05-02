@@ -1,49 +1,377 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CodeKritik</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeKritik — Repository Analyzer</title>
     <style>
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #21262d;
+            --border: #30363d;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-dim: #1f6feb33;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --success: #3fb950;
+            --warning: #d29922;
+            --danger: #f85149;
+            --radius: 10px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
-            font-family: Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* ── Header ── */
+        header {
+            width: 100%;
+            padding: 18px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+        }
+
+        header .logo-icon {
+            font-size: 28px;
+        }
+
+        header h1 {
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.3px;
+            color: var(--text);
+        }
+
+        header .tagline {
+            margin-left: auto;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ── Hero ── */
+        .hero {
+            margin-top: 60px;
             text-align: center;
-            margin-top: 50px;
+            padding: 0 20px;
         }
-        h1 {
-            font-size: 60px;
-            color: #2c3e50; /* adjustable */
-            font-family: 'Helvetica', sans-serif; /* adjustable */
+
+        .hero h2 {
+            font-size: 42px;
+            font-weight: 800;
+            letter-spacing: -1px;
+            background: linear-gradient(135deg, #58a6ff 0%, #bc8cff 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 14px;
         }
-        .form-box {
-            margin: 20px;
-        }
-        input {
-            padding: 10px;
-            width: 300px;
+
+        .hero p {
             font-size: 16px;
+            color: var(--text-muted);
+            max-width: 520px;
+            margin: 0 auto 40px;
+            line-height: 1.6;
         }
-        button {
-            padding: 10px 20px;
-            font-size: 18px;
+
+        /* ── Card ── */
+        .card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 32px 36px;
+            width: 100%;
+            max-width: 560px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+        }
+
+        .card h3 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            margin-bottom: 24px;
+        }
+
+        /* ── Form ── */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-bottom: 6px;
+            letter-spacing: 0.3px;
+        }
+
+        input[type="text"],
+        input[type="date"] {
+            width: 100%;
+            padding: 10px 14px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 14px;
+            transition: border-color 0.2s, box-shadow 0.2s;
+            outline: none;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px var(--accent-dim);
+        }
+
+        input::placeholder { color: var(--text-muted); }
+
+        .date-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* ── Button ── */
+        .btn-primary {
+            width: 100%;
+            padding: 12px;
+            background: var(--accent);
+            color: #0d1117;
+            font-size: 15px;
+            font-weight: 700;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            margin-top: 8px;
+            letter-spacing: 0.2px;
+        }
+
+        .btn-primary:hover { background: var(--accent-hover); }
+        .btn-primary:active { transform: scale(0.98); }
+
+        /* ── Loading overlay ── */
+        #loading {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(13,17,23,0.85);
+            z-index: 100;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        #loading.active { display: flex; }
+
+        .spinner {
+            width: 48px;
+            height: 48px;
+            border: 4px solid var(--border);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        #loading p {
+            color: var(--text-muted);
+            font-size: 15px;
+        }
+
+        /* ── Feature pills ── */
+        .features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 48px;
+            margin-bottom: 60px;
+            padding: 0 20px;
+        }
+
+        .pill {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .pill .dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: var(--accent);
+        }
+
+        /* ── Error banner ── */
+        .error-banner {
+            width: 100%;
+            max-width: 560px;
             margin-top: 20px;
+            background: rgba(248, 81, 73, 0.12);
+            border: 1px solid var(--danger);
+            border-radius: var(--radius);
+            padding: 16px 20px;
+            color: var(--danger);
+            font-size: 14px;
+            line-height: 1.6;
         }
+
+        .error-banner strong { color: #ff7b72; }
+        .error-banner code {
+            background: rgba(248,81,73,0.15);
+            padding: 1px 5px;
+            border-radius: 4px;
+            font-size: 13px;
+            word-break: break-all;
+        }
+
+        .log-block {
+            width: 100%;
+            max-width: 560px;
+            margin-top: 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 14px 16px;
+            font-family: 'SFMono-Regular', Consolas, 'Liberation Mono', Menlo, monospace;
+            font-size: 12px;
+            color: var(--text-muted);
+            white-space: pre-wrap;
+            word-break: break-all;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        details > summary {
+            cursor: pointer;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            user-select: none;
+        }
+
+        /* ── Footer ── */
+        footer {
+            margin-top: auto;
+            padding: 20px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            width: 100%;
+            text-align: center;
+        }
+
+        footer a { color: var(--accent); text-decoration: none; }
+        footer a:hover { text-decoration: underline; }
     </style>
 </head>
 <body>
+
+<header>
+    <span class="logo-icon">🔬</span>
     <h1>CodeKritik</h1>
-    <form method="POST">
-        <div class="form-box">
-            <label>Repo URL:</label><br>
-            <input type="text" name="repo_url" required>
+    <span class="tagline">Static Analysis &amp; Git History Metrics</span>
+</header>
+
+<div class="hero">
+    <h2>Analyze Any Repository</h2>
+    <p>Compute LOC, Halstead, Cyclomatic Complexity, ABC, and Maintainability Index metrics across every commit in a date range.</p>
+</div>
+
+<div class="card">
+    <h3>New Analysis</h3>
+    <form method="POST" id="analyzeForm">
+        <div class="form-group">
+            <label for="repo_url">Repository URL</label>
+            <input type="text" id="repo_url" name="repo_url"
+                   placeholder="https://github.com/owner/repo.git" required>
         </div>
-        <div class="form-box">
-            <label>Start Date (MM-DD-YYYY):</label><br>
-            <input type="text" name="start_date" required>
+
+        <div class="date-row">
+            <div class="form-group">
+                <label for="start_date">Start Date</label>
+                <input type="text" id="start_date" name="start_date"
+                       placeholder="MM-DD-YYYY" pattern="\d{2}-\d{2}-\d{4}" required>
+            </div>
+            <div class="form-group">
+                <label for="end_date">End Date</label>
+                <input type="text" id="end_date" name="end_date"
+                       placeholder="MM-DD-YYYY" pattern="\d{2}-\d{2}-\d{4}" required>
+            </div>
         </div>
-        <div class="form-box">
-            <label>End Date (MM-DD-YYYY):</label><br>
-            <input type="text" name="end_date" required>
-        </div>
-        <button type="submit">Analyze</button>
+
+        <button type="submit" class="btn-primary" id="submitBtn">
+            ▶ Run Analysis
+        </button>
     </form>
+</div>
+
+{% if error %}
+<div class="error-banner">
+    ⚠️ &nbsp;{{ error | safe }}
+</div>
+{% if log_output %}
+<details style="width:100%;max-width:560px;margin-top:8px;">
+    <summary>▶ Show full log output</summary>
+    <div class="log-block">{{ log_output }}</div>
+</details>
+{% endif %}
+{% endif %}
+
+<div class="features">
+    <div class="pill"><span class="dot"></span> Lines of Code (LOC)</div>
+    <div class="pill"><span class="dot"></span> Halstead Metrics</div>
+    <div class="pill"><span class="dot"></span> Cyclomatic Complexity</div>
+    <div class="pill"><span class="dot"></span> ABC Score</div>
+    <div class="pill"><span class="dot"></span> Maintainability Index</div>
+    <div class="pill"><span class="dot"></span> Per-User Commit Stats</div>
+    <div class="pill"><span class="dot"></span> HLL · ASM · IR Support</div>
+    <div class="pill"><span class="dot"></span> Multi-Branch Analysis</div>
+</div>
+
+<div id="loading">
+    <div class="spinner"></div>
+    <p>Cloning repository and computing metrics…</p>
+</div>
+
+<footer>
+    <a href="/browse">Browse Previous Results</a> &nbsp;·&nbsp;
+    CodeKritik — open-source repository analytics
+</footer>
+
+<script>
+    document.getElementById('analyzeForm').addEventListener('submit', function() {
+        document.getElementById('loading').classList.add('active');
+        document.getElementById('submitBtn').disabled = true;
+        document.getElementById('submitBtn').textContent = 'Analyzing…';
+    });
+</script>
+
 </body>
 </html>

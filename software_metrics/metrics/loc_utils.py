@@ -142,7 +142,7 @@ def loc_full_analysis(loc_dict,
     for lang in lang_dict.keys():
         percentage_dict[lang] = {}
         for key in global_dict.keys():
-            percentage_dict[lang][key] = (lang_dict[lang][key] / global_dict[key]) * 100
+            percentage_dict[lang][key] = (lang_dict[lang][key] / global_dict[key]) * 100 if global_dict[key] else 0.0
         
          
     #now get LOC percentage per language

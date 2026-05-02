@@ -1,40 +1,327 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>CodeKritik Results</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CodeKritik — Browse Results</title>
     <style>
-        ul { list-style-type: none; margin-left: 20px; }
-        li { margin: 4px 0; }
-        .folder { font-weight: bold; cursor: pointer; }
-        .nested { display: none; }
-        .active { display: block; }
+        :root {
+            --bg: #0d1117;
+            --surface: #161b22;
+            --surface2: #21262d;
+            --border: #30363d;
+            --accent: #58a6ff;
+            --accent-hover: #79c0ff;
+            --accent-dim: #1f6feb33;
+            --text: #e6edf3;
+            --text-muted: #8b949e;
+            --success: #3fb950;
+            --radius: 10px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Header ── */
+        header {
+            width: 100%;
+            padding: 18px 40px;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: var(--surface);
+        }
+
+        header .logo-icon { font-size: 24px; }
+
+        header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--text);
+        }
+
+        header nav {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+        }
+
+        header nav a {
+            font-size: 13px;
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        header nav a:hover { color: var(--accent); }
+
+        /* ── Layout ── */
+        .layout {
+            display: flex;
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 32px 24px;
+            gap: 24px;
+        }
+
+        /* ── Sidebar / Tree ── */
+        .sidebar {
+            width: 320px;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 16px;
+        }
+
+        .sidebar-header h2 {
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .search-box {
+            width: 100%;
+            padding: 8px 12px;
+            background: var(--surface2);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            color: var(--text);
+            font-size: 13px;
+            outline: none;
+            margin-bottom: 12px;
+            transition: border-color 0.2s;
+        }
+
+        .search-box:focus { border-color: var(--accent); }
+        .search-box::placeholder { color: var(--text-muted); }
+
+        /* ── Tree ── */
+        .tree {
+            list-style: none;
+        }
+
+        .tree li {
+            margin: 2px 0;
+        }
+
+        .tree-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 8px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 13px;
+            color: var(--text-muted);
+            transition: background 0.15s, color 0.15s;
+            user-select: none;
+        }
+
+        .tree-item:hover {
+            background: var(--surface2);
+            color: var(--text);
+        }
+
+        .tree-item .icon { font-size: 14px; flex-shrink: 0; }
+
+        .tree-item.folder { font-weight: 600; color: var(--text); }
+
+        .tree-item.file { color: var(--text-muted); }
+        .tree-item.file:hover { color: var(--accent); }
+
+        .tree-item a {
+            color: inherit;
+            text-decoration: none;
+            flex: 1;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .nested {
+            display: none;
+            padding-left: 18px;
+            border-left: 1px solid var(--border);
+            margin-left: 12px;
+        }
+
+        .nested.active { display: block; }
+
+        .chevron {
+            font-size: 10px;
+            transition: transform 0.2s;
+            color: var(--text-muted);
+        }
+
+        .chevron.open { transform: rotate(90deg); }
+
+        /* ── Main content ── */
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .welcome-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 40px;
+            text-align: center;
+        }
+
+        .welcome-card .big-icon { font-size: 48px; margin-bottom: 16px; }
+
+        .welcome-card h3 {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .welcome-card p {
+            color: var(--text-muted);
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        /* ── Stats bar ── */
+        .stats-bar {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .stat-chip {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .stat-chip strong {
+            color: var(--accent);
+            font-size: 16px;
+            display: block;
+        }
+
+        /* ── Footer ── */
+        footer {
+            padding: 16px 40px;
+            font-size: 12px;
+            color: var(--text-muted);
+            border-top: 1px solid var(--border);
+            text-align: center;
+        }
+
+        footer a { color: var(--accent); text-decoration: none; }
     </style>
 </head>
 <body>
-    <h2>Repo Analysis Files</h2>
-    <ul>
-        {% macro render_node(node, relpath="") %}
-            <li>
-                <span class="folder" onclick="toggle(this)">{{ node.name }}/</span>
-                <ul class="nested">
-                    {% for d in node.dirs %}
-                        {{ render_node(d, relpath + '/' + d.name) }}
-                    {% endfor %}
-                    {% for f in node.files %}
-                        <li>
-                            <a href="{{ url_for('view_file', filename=(relpath + '/' + f).lstrip('/')) }}">{{ f }}</a>
-                        </li>
-                    {% endfor %}
-                </ul>
-            </li>
-        {% endmacro %}
-        {{ render_node(tree, "") }}
-    </ul>
 
-    <script>
-        function toggle(el) {
-            el.nextElementSibling.classList.toggle("active");
-        }
-    </script>
+<header>
+    <span class="logo-icon">🔬</span>
+    <h1>CodeKritik</h1>
+    <nav>
+        <a href="/">New Analysis</a>
+        <a href="/browse">Browse Results</a>
+    </nav>
+</header>
+
+<div class="layout">
+    <!-- Sidebar tree -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>Analysis Files</h2>
+        </div>
+        <input class="search-box" type="text" id="searchBox" placeholder="Filter files…">
+
+        <ul class="tree" id="fileTree">
+            {% macro render_node(node, relpath="") %}
+                <li>
+                    <div class="tree-item folder" onclick="toggleFolder(this)">
+                        <span class="chevron">▶</span>
+                        <span class="icon">📁</span>
+                        <span>{{ node.name }}</span>
+                    </div>
+                    <ul class="nested">
+                        {% for d in node.dirs %}
+                            {{ render_node(d, relpath + '/' + d.name) }}
+                        {% endfor %}
+                        {% for f in node.files %}
+                            <li>
+                                <div class="tree-item file">
+                                    <span class="icon">
+                                        {% if f.endswith('.json') %}📊
+                                        {% elif f.endswith('.txt') %}📄
+                                        {% else %}📋{% endif %}
+                                    </span>
+                                    <a href="{{ url_for('view_file', filename=(relpath + '/' + f).lstrip('/')) }}">{{ f }}</a>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </li>
+            {% endmacro %}
+            {{ render_node(tree, "") }}
+        </ul>
+    </aside>
+
+    <!-- Main area -->
+    <main class="main">
+        <div class="welcome-card">
+            <div class="big-icon">📂</div>
+            <h3>Select a file to view</h3>
+            <p>Browse the analysis tree on the left to open metric JSON files.<br>
+               Each folder represents a branch → date → commit hash.</p>
+        </div>
+    </main>
+</div>
+
+<footer>
+    <a href="/">← Back to Analyzer</a>
+</footer>
+
+<script>
+    function toggleFolder(el) {
+        const nested = el.nextElementSibling;
+        const chevron = el.querySelector('.chevron');
+        nested.classList.toggle('active');
+        chevron.classList.toggle('open');
+    }
+
+    // Auto-expand top-level folder
+    document.querySelectorAll('.tree > li > .tree-item.folder').forEach(el => {
+        el.click();
+    });
+
+    // Search / filter
+    document.getElementById('searchBox').addEventListener('input', function() {
+        const q = this.value.toLowerCase();
+        document.querySelectorAll('.tree-item.file').forEach(item => {
+            const name = item.querySelector('a')?.textContent.toLowerCase() || '';
+            item.closest('li').style.display = (!q || name.includes(q)) ? '' : 'none';
+        });
+    });
+</script>
+
 </body>
 </html>

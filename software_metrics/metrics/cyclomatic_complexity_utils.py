@@ -144,38 +144,50 @@ def cc_process_directory(directory,
                          ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     langs, cc_dict = [], {}
-    for root,dirs,files in os.walk(directory):
+    for root, dirs, files in os.walk(directory):
         for file in files:
             _, extension = os.path.splitext(file)
-            if extension in extensions_to_count: 
-                language = get_language_for_extension(extensions_map,extension)
+            if extension in extensions_to_count:
+                language = get_language_for_extension(extensions_map, extension)
                 langs.append(language)
-                if language != 'unknown':
-                    file_path = os.path.join(root,file)
-                    with open(file_path,'r') as code_file:
-                        code_lines = code_file.readlines()
-                    if language == 'Assembly':
-                        lang_dict = json.load(open(asm_tokens))
-                        comments_json = asm_tokens
-                        lang_ = detect_assembly_language(' '.join(code_lines))
-                    if language in ['LLVM','IR_GROUP']:
-                        lang_dict = json.load(open(ir_tokens))
-                        comments_json = ir_tokens
-                        lang_ = detect_ir_language(' '.join(code_lines))
-                    if language not in ['LLVM','IR_GROUP','Assembly']:
-                        lang_dict = json.load(open(hll_tokens))
-                        comments_json = hll_tokens
-                        lang_ = language
-                    
-                    source_code_lines = fetch_lines(lines = code_lines,
-                                                    language = lang_,
-                                                    comments_json = comments_json,
-                                                    mode = 'source')
+                if language == 'Unknown':
+                    continue
 
-                    results = compute_cyclomatic_complexity(code_lines = source_code_lines,
-                                                            language = lang_,
-                                                            lang_dict = lang_dict)
-                    cc_dict[file_path] = results
+                file_path = os.path.join(root, file)
+                try:
+                    with open(file_path, 'r') as code_file:
+                        code_lines = code_file.readlines()
+                except Exception as exc:
+                    print(f'error reading file {file_path}: {exc}, skipping...')
+                    continue
+
+                if language == 'Assembly':
+                    lang_dict = json.load(open(asm_tokens))
+                    comments_json = asm_tokens
+                    lang_ = detect_assembly_language(' '.join(code_lines))
+                elif language in ['LLVM', 'IR_GROUP']:
+                    lang_dict = json.load(open(ir_tokens))
+                    comments_json = ir_tokens
+                    lang_ = detect_ir_language(' '.join(code_lines))
+                else:
+                    lang_dict = json.load(open(hll_tokens))
+                    comments_json = hll_tokens
+                    lang_ = language
+
+                # Guard: if detection failed, skip
+                if lang_ is None or lang_ not in lang_dict:
+                    print(f'Could not detect sub-language for {file_path} (language={language}, detected={lang_}), skipping...')
+                    continue
+
+                source_code_lines = fetch_lines(lines = code_lines,
+                                                language = lang_,
+                                                comments_json = comments_json,
+                                                mode = 'source')
+
+                results = compute_cyclomatic_complexity(code_lines = source_code_lines,
+                                                        language = lang_,
+                                                        lang_dict = lang_dict)
+                cc_dict[file_path] = results
     return cc_dict
 
 def cc_full_analysis(cc_dict,extensions_map):

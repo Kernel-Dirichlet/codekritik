@@ -61,11 +61,11 @@ def main():
     start_date = since_date.strftime('%m-%d-%Y')
     end_date = until_date.strftime('%m-%d-%Y')
 
-    branch_name = args.branch
-    repo_url = args.repo_url
+    branch_name = args.branch #fetch GitHub branch name
+    repo_url = args.repo_url #fetch GitHub repo URL
     # Base path for storing analysis outputs
     REPO_ANALYSIS_BASE = './repo_analysis'  # Ensure this directory exists or can be created and is writable
-
+    
     # Optionally build per-user commit dicts (in-memory) and write per-user JSONs
     if args.write_user_info:
         branch_for_info = branch_name if branch_name != 'all' else 'main'
@@ -95,7 +95,7 @@ def main():
     STATIC_ANALYZER_PATH = os.path.join(STATIC_ANALYZER_DIR, 'static_analyzer.py')
 
     # Hard-code the repo_analysis path
-    REPO_ANALYSIS_BASE = './repo_analysis'  # Ensure this directory exists or can be created and is writable
+    #REPO_ANALYSIS_BASE = './repo_analysis'  # Ensure this directory exists or can be created and is writable
 
     # Informative print statements
     print(f"\n========== Git Commit Analysis ==========")
@@ -106,10 +106,18 @@ def main():
     print(f"REPO_ANALYSIS_BASE : {REPO_ANALYSIS_BASE}")
     print("==========================================\n")
 
+    # Extract a filesystem-safe repo name from the URL for informative directory names
+    repo_name = repo_url.rstrip('/').split('/')[-1].replace('.git', '')
+
+    # Nest all analysis output under repo_analysis/<repo_name>/
+    # so results from different repos never collide; internal structure
+    # (branch/date/hash/logs_*) is preserved exactly as before.
+    REPO_ANALYSIS_BASE = os.path.join(REPO_ANALYSIS_BASE, repo_name)
+
     # Get list of branches
     if branch_name == 'all':
         # Clone the repository to get the list of branches
-        temp_repo_path = "/tmp/git_repo_clone_temp"
+        temp_repo_path = f"/tmp/codekritik_{repo_name}_temp"
         if os.path.exists(temp_repo_path):
             shutil.rmtree(temp_repo_path)
         clone_repository(repo_url, temp_repo_path)
@@ -123,7 +131,7 @@ def main():
         print(f"\nProcessing branch: {branch}")
         
         # Clone the repository into a temporary directory for the branch
-        branch_repo_path = f"./tmp/_{branch}"
+        branch_repo_path = f"./tmp/{repo_name}_{branch}"
         if os.path.exists(branch_repo_path):
             shutil.rmtree(branch_repo_path)
         clone_repository(repo_url, branch_repo_path)
@@ -152,14 +160,16 @@ def main():
 
                 try:
                     # Checkout the specific commit in the branch repo
-                    subprocess.run(['git', 'checkout', commit_hash], check=True, cwd=branch_repo_path)
+                    subprocess.run(['git', 'checkout', commit_hash],
+                                    check = True,
+                                    cwd = branch_repo_path)
 
                     # Verify the current commit
                     result = subprocess.run(
                         ['git', 'rev-parse', 'HEAD'],
-                        capture_output=True,
-                        text=True,
-                        cwd=branch_repo_path
+                        capture_output = True,
+                        text = True,
+                        cwd = branch_repo_path
                     )
                     current_commit = result.stdout.strip()
                     if current_commit != commit_hash:
@@ -177,18 +187,21 @@ def main():
 
                     # Create the /repo_analysis/<branch>/<date>/<hash> directory for the logs
                     commit_analysis_dir = os.path.join(REPO_ANALYSIS_BASE, branch, commit_date, commit_hash)
-                    os.makedirs(commit_analysis_dir, exist_ok=True)
+                    os.makedirs(commit_analysis_dir,
+                                exist_ok = True)
 
                     # Prepare environment variables
                     env = os.environ.copy()
                     env['PYTHONPATH'] = STATIC_ANALYZER_DIR
 
-                    # Run static_analyzer.py from its own directory
+                    # Run static_analyzer.py from its own directory.
+                    # Use sys.executable so the subprocess uses the same venv
+                    # as the parent process (ensures all packages are available).
                     subprocess.run(
-                        ['python', STATIC_ANALYZER_PATH, '--dir', branch_repo_path],
-                        check=True,
-                        cwd=STATIC_ANALYZER_DIR,
-                        env=env
+                        [sys.executable, STATIC_ANALYZER_PATH, '--dir', branch_repo_path],
+                        check = True,
+                        cwd = STATIC_ANALYZER_DIR,
+                        env = env
                     )
 
                     # Move logs from where static_analyzer.py outputs them to commit_analysis_dir

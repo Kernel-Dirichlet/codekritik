@@ -6,12 +6,17 @@ def clone_repository(repo_url, clone_path):
     """
     Clone a remote git repository to a specified directory.
     If the directory exists, delete it to start fresh.
+    Runs with GIT_TERMINAL_PROMPT=0 so git never blocks waiting for
+    credentials when invoked from a non-TTY context (e.g. Flask subprocess).
     """
     if os.path.exists(clone_path):
         print(f"Directory {clone_path} already exists. Removing it for a fresh clone.")
         shutil.rmtree(clone_path)
 
-    subprocess.run(['git', 'clone', repo_url, clone_path], check=True)
+    env = os.environ.copy()
+    env['GIT_TERMINAL_PROMPT'] = '0'   # never prompt for credentials
+    env['GIT_ASKPASS'] = 'echo'        # return empty string for any credential query
+    subprocess.run(['git', 'clone', repo_url, clone_path], check=True, env=env)
     print(f"Cloned repository from {repo_url} to {clone_path}")
 
 def fetch_git_history_between_dates(start_date, end_date, branch_name='main', repo_url=None, local_path=None):

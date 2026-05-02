@@ -94,32 +94,42 @@ def halstead_process_directory(directory,
                                ir_tokens = '../run_metrics/metrics_cfgs/ir_tokens.json'):
 
     """Processes files in the specified directory and computes Halstead metrics."""
-    langs = []
     halstead_metrics = {}
     
     for root, dirs, files in os.walk(directory):
         for file in files:
             _, extension = os.path.splitext(file)
             if extension in extensions_to_count:
-                language = get_language_for_extension(extensions_map,extension)
-                langs.append(language)
-                if language != 'unknown':
-                    file_path = os.path.join(root, file)
+                language = get_language_for_extension(extensions_map, extension)
+                if language == 'Unknown':
+                    continue
+
+                file_path = os.path.join(root, file)
+                try:
                     with open(file_path, 'r') as code_file:
                         code_lines = code_file.readlines()
-                    if language == 'Assembly':
-                        regexes = json.load(open(asm_tokens))
-                        comments_json = asm_tokens
-                        lang_ = detect_assembly_language(' '.join(code_lines))
-                    if language in ['LLVM','IR_GROUP']:
-                        regexes = json.load(open(ir_tokens))
-                        comments_json = ir_tokens
-                        lang_ = detect_ir_language(' '.join(code_lines))
-                    if language not in ['LLVM','IR_GROUP','Assembly']:
-                        regexes = json.load(open(hll_tokens))
-                        comments_json = hll_tokens
-                        lang_ = language
-                        
+                except Exception as exc:
+                    print(f'error reading file {file_path}: {exc}, skipping...')
+                    continue
+
+                if language == 'Assembly':
+                    regexes = json.load(open(asm_tokens))
+                    comments_json = asm_tokens
+                    lang_ = detect_assembly_language(' '.join(code_lines))
+                elif language in ['LLVM', 'IR_GROUP']:
+                    regexes = json.load(open(ir_tokens))
+                    comments_json = ir_tokens
+                    lang_ = detect_ir_language(' '.join(code_lines))
+                else:
+                    regexes = json.load(open(hll_tokens))
+                    comments_json = hll_tokens
+                    lang_ = language
+
+                # Guard: if detection failed, skip
+                if lang_ is None or lang_ not in regexes:
+                    print(f'Could not detect sub-language for {file_path} (language={language}, detected={lang_}), skipping...')
+                    continue
+
                 source_code_lines = fetch_lines(lines = code_lines,
                                                 language = lang_,
                                                 comments_json = comments_json,
@@ -130,23 +140,23 @@ def halstead_process_directory(directory,
                                             assignment_tokens = assignment_tokens)
 
                 halstead_results = compute_halstead_metrics(ops_dict)
-                halstead_metrics[file_path] = halstead_results
+                if halstead_results is not None:
+                    halstead_metrics[file_path] = halstead_results
     
     return halstead_metrics
 
-def halstead_full_analysis(halstead_dict,extensions_map):
+def halstead_full_analysis(halstead_dict, extensions_map):
 
     lang_dict = {}
     files = list(halstead_dict.keys())
-    for i,file in enumerate(files):
+    for i, file in enumerate(files):
         ext = '.' + file.split('.')[-1]
-        lang = get_language_for_extension(extensions_map,ext)
+        lang = get_language_for_extension(extensions_map, ext)
         
         if lang == 'Unknown':
             continue
-        if lang not in lang_dict.keys():
+        if lang not in lang_dict:
             lang_dict[lang] = {'unique_operators': 0,
-
                                'unique_operands': 0,
                                'total_operators': 0,
                                'total_operands': 0,
@@ -157,14 +167,21 @@ def halstead_full_analysis(halstead_dict,extensions_map):
                                'effort': 0,
                                'estimated_bugs': 0}
 
-        if lang in lang_dict.keys():
-            for key in halstead_dict[file].keys():
-                lang_dict[lang][key] += halstead_dict[file][key]
+        for key in halstead_dict[file].keys():
+            lang_dict[lang][key] += halstead_dict[file][key]
         
-    global_dict = {k: 0 for k in lang_dict[lang]}
-    for lang in lang_dict.keys():
-        for key in lang_dict[lang].keys():
-            global_dict[key] += lang_dict[lang][key]
+    if not lang_dict:
+        global_dict = {'unique_operators': 0, 'unique_operands': 0,
+                       'total_operators': 0, 'total_operands': 0,
+                       'vocabulary_size': 0, 'program_length': 0,
+                       'volume': 0, 'difficulty': 0, 'effort': 0, 'estimated_bugs': 0}
+    else:
+        last_lang = list(lang_dict.keys())[-1]
+        global_dict = {k: 0 for k in lang_dict[last_lang]}
+        for lang in lang_dict.keys():
+            for key in lang_dict[lang].keys():
+                global_dict[key] += lang_dict[lang][key]
+
     halstead_full_dict = {'global_dict': global_dict,
                           'language_dict': lang_dict,
                           'file_dict': halstead_dict}

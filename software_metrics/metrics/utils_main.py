@@ -41,9 +41,8 @@ def get_language_for_extension(extensions_map, extension):
     return "Unknown"
 
 def read_lang_regex_json(file_path):
-
     lang_regex_dict = json.load(open(file_path,'r'))
-    import pdb ; pdb.set_trace()
+    return lang_regex_dict
 
 def parse_runner_cfg(file_path):
     mapping = {}  # Initialize an empty dictionary to store the key-value mappings
@@ -55,7 +54,8 @@ def parse_runner_cfg(file_path):
                     parts = line.split(':')
                     if len(parts) == 2:
                         key = parts[0].strip()  # Extract the key
-                        value = bool(parts[1].strip())  # Convert the value to a boolean
+                        raw = parts[1].strip().lower()
+                        value = raw == 'true'  # Properly parse boolean string
                         mapping[key] = value  # Add the key-value pair to the dictionary
     except FileNotFoundError:
         print(f"Error: File '{file_path}' not found.")
