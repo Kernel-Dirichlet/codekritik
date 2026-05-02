@@ -160,7 +160,47 @@ python mcp_servers/codekritik_metrics_server.py
 
 ### Step 2 — Run the bundled Ollama client
 
-A ready-to-use client is provided at `mcp_servers/ollama_mcp_client.py`:
+A ready-to-use client is provided at `mcp_servers/ollama_mcp_client.py`. It supports two modes:
+
+#### Direct tool call (no LLM — raw JSON output)
+
+Call any MCP tool directly and get the raw JSON result without involving a language model. Useful for scripting, CI pipelines, or quick inspection:
+
+```bash
+# Run full static analysis on a directory (default tool)
+python mcp_servers/ollama_mcp_client.py \
+    --server http://127.0.0.1:8000 \
+    --dir /path/to/my/project
+
+# Call a specific tool
+python mcp_servers/ollama_mcp_client.py \
+    --server http://127.0.0.1:8000 \
+    --tool get_cyclomatic_complexity \
+    --dir /path/to/my/project
+```
+
+**Example output:**
+
+```
+[codekritik-mcp] Connected to http://127.0.0.1:8000
+[codekritik-mcp] Calling tool: get_cyclomatic_complexity  directory: /path/to/my/project
+
+{
+  "global": {
+    "mean_cc": 4.2,
+    "max_cc": 18
+  },
+  "per_file": {
+    "src/parser.py": 18,
+    "src/codegen.py": 14,
+    ...
+  }
+}
+```
+
+#### Agentic mode (LLM analysis on top of tool output)
+
+Pass `--prompt` to engage an Ollama model that autonomously calls tools and then summarises the results in natural language:
 
 ```bash
 python mcp_servers/ollama_mcp_client.py \

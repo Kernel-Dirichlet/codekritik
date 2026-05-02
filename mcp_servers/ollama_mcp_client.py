@@ -15,6 +15,13 @@ Prerequisites
 
 Usage
 -----
+Direct tool call (no LLM — prints raw JSON):
+    python mcp_servers/ollama_mcp_client.py \
+        --server http://127.0.0.1:8000 \
+        --tool run_static_analysis \
+        --dir /path/to/project
+
+Agentic mode (LLM analyses the results on top):
     python mcp_servers/ollama_mcp_client.py \
         --model qwen2.5:7b \
         --server http://127.0.0.1:8000 \
@@ -43,6 +50,32 @@ def _mcp_tool_to_ollama(tool) -> dict:
             "parameters": tool.inputSchema if tool.inputSchema else {"type": "object", "properties": {}},
         },
     }
+
+
+async def run_direct_tool(server_url: str, tool_name: str, directory: str) -> None:
+    """
+    Connect to the CodeKritik MCP server and call a single tool directly,
+    printing the raw JSON result — no LLM involved.
+    """
+    async with streamablehttp_client(server_url) as (read, write, _):
+        async with ClientSession(read, write) as session:
+            await session.initialize()
+
+            print(f"[codekritik-mcp] Connected to {server_url}")
+            print(f"[codekritik-mcp] Calling tool: {tool_name}  directory: {directory}\n")
+
+            try:
+                result = await session.call_tool(tool_name, {"directory": directory})
+                raw = result.content[0].text if result.content else "{}"
+                # Pretty-print if it looks like JSON
+                try:
+                    parsed = json.loads(raw)
+                    print(json.dumps(parsed, indent=2))
+                except (json.JSONDecodeError, TypeError):
+                    print(raw)
+            except Exception as exc:
+                print(f"[error] Tool call failed: {exc}", file=sys.stderr)
+                sys.exit(1)
 
 
 async def run_agent(model: str, server_url: str, user_prompt: str) -> None:
@@ -107,16 +140,44 @@ async def run_agent(model: str, server_url: str, user_prompt: str) -> None:
 # ── Entry point ───────────────────────────────────────────────────────────────
 
 def main():
-    parser = argparse.ArgumentParser(description="CodeKritik × Ollama MCP client")
+    parser = argparse.ArgumentParser(
+        description="CodeKritik × Ollama MCP client",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  # Direct tool call — raw JSON output, no LLM required:
+  python mcp_servers/ollama_mcp_client.py \\
+      --server http://127.0.0.1:8000 \\
+      --tool run_static_analysis \\
+      --dir /path/to/project
+
+  # Agentic mode — LLM analyses results on top of tool output:
+  python mcp_servers/ollama_mcp_client.py \\
+      --model qwen2.5:7b \\
+      --server http://127.0.0.1:8000 \\
+      --prompt "What are the 5 most complex files in /path/to/project?"
+""",
+    )
     parser.add_argument("--model",  default="qwen2.5:7b",
-                        help="Ollama model name (must support tool calling)")
+                        help="Ollama model name (must support tool calling) [default: qwen2.5:7b]")
     parser.add_argument("--server", default="http://127.0.0.1:8000",
-                        help="URL of the running CodeKritik MCP server")
-    parser.add_argument("--prompt", required=True,
-                        help="Natural-language prompt for the agent")
+                        help="URL of the running CodeKritik MCP server [default: http://127.0.0.1:8000]")
+    parser.add_argument("--prompt", default=None,
+                        help="Natural-language prompt for the Ollama agent. "
+                             "When omitted, --tool is called directly and raw JSON is printed.")
+    parser.add_argument("--tool",   default="run_static_analysis",
+                        help="MCP tool to call in direct mode (used when --prompt is not given) "
+                             "[default: run_static_analysis]")
+    parser.add_argument("--dir",    default=".",
+                        help="Directory to pass to the tool in direct mode [default: current directory]")
     args = parser.parse_args()
 
-    asyncio.run(run_agent(args.model, args.server, args.prompt))
+    if args.prompt is None:
+        # ── Direct tool-call mode (no LLM) ───────────────────────────────
+        asyncio.run(run_direct_tool(args.server, args.tool, args.dir))
+    else:
+        # ── Agentic mode (Ollama + tool calling) ─────────────────────────
+        asyncio.run(run_agent(args.model, args.server, args.prompt))
 
 
 if __name__ == "__main__":
